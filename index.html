@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lukas Bärmann – Freischaffender Künstler</title>
+  <meta name="description" content="Lukas Bärmann – freischaffender Künstler. Arbeiten, Ausstellungen, Vita und Kontakt.">
+  <link rel="canonical" href="https://lukasbaermann.de/">
+  <meta property="og:title" content="Lukas Bärmann – Freischaffender Künstler">
+  <meta property="og:description" content="Arbeiten, Ausstellungen, Vita und Kontakt.">
+  <meta property="og:url" content="https://lukasbaermann.de/">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#arbeiten">Zum Inhalt springen</a>
+
+  <header class="site-header">
+    <a class="logo" href="#top">Lukas Bärmann</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav">Menü</button>
+    <nav id="nav" class="nav">
+      <a href="#arbeiten">Arbeiten</a>
+      <a href="#ausstellungen">Ausstellungen</a>
+      <a href="#vita">Vita</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <h1>Lukas Bärmann</h1>
+      <p class="lead">Freischaffender Künstler · Malerei, Zeichnung, Installation</p>
+    </section>
+
+    <section id="arbeiten" class="section">
+      <div class="section-head">
+        <h2>Arbeiten</h2>
+        <div class="filters" role="group" aria-label="Arbeiten filtern"></div>
+      </div>
+      <ul class="gallery" id="gallery"></ul>
+    </section>
+
+    <section id="ausstellungen" class="section">
+      <h2>Ausstellungen</h2>
+      <ul class="list" id="exhibitions"></ul>
+    </section>
+
+    <section id="vita" class="section two-col">
+      <h2>Vita</h2>
+      <div>
+        <p>
+          Lukas Bärmann lebt und arbeitet als freischaffender Künstler in [Stadt].
+          Hier steht ein kurzer Text über deine Arbeit: Themen, Materialien,
+          Arbeitsweise – was dich antreibt und was Betrachter*innen erwartet.
+        </p>
+        <dl class="cv">
+          <dt>seit 20XX</dt><dd>Freischaffend tätig in [Stadt]</dd>
+          <dt>20XX–20XX</dt><dd>Studium der Freien Kunst, [Hochschule]</dd>
+          <dt>19XX</dt><dd>Geboren in [Ort]</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section id="kontakt" class="section two-col">
+      <h2>Kontakt</h2>
+      <div>
+        <p>Für Anfragen zu Arbeiten, Ausstellungen und Aufträgen:</p>
+        <p class="contact">
+          <a href="mailto:kontakt@lukasbaermann.de">kontakt@lukasbaermann.de</a><br>
+          <a href="https://instagram.com/" rel="noopener">Instagram</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span id="year"></span> Lukas Bärmann</span>
+    <span><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Werkansicht">
+    <button class="lb-close" aria-label="Schließen">×</button>
+    <button class="lb-prev" aria-label="Vorheriges Werk">‹</button>
+    <figure>
+      <div class="lb-media"></div>
+      <figcaption></figcaption>
+    </figure>
+    <button class="lb-next" aria-label="Nächstes Werk">›</button>
+  </dialog>
+
+  <script src="js/content.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
