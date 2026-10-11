@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(sed -i '/werkzeug\\\\/neues_werk.py/d;/werkzeug\\\\/montagen\\\\//d' .git/info/exclude)",
-      "Bash(python3 -I -)",
-      "Bash(git add *)"
-    ]
-  }
-}
