@@ -1,6 +1,40 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><link rel="icon" href="favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Impressum – Lukas Bärmann</title>
-<style>body{background:#fff;color:#111;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:1.65;margin:0}main{max-width:720px;margin:0 auto;padding:50px 20px 80px}h1,h2{font-weight:300}h1{font-size:2.2rem}h2{font-size:1.3rem;margin-top:34px}a{color:#111}.ph{background:#fde7c8;padding:0 4px}</style></head><body><main><p><a href="index.html">← Zurück zur Startseite</a></p><h1>Impressum</h1>
-<h2>Angaben gemäß § 5 DDG</h2>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>impressum – lukas bärmann</title>
+<style>
+  :root{--ink:#141414;--muted:#7a7a7a;--line:#dcdcdc;--sans:"Helvetica Neue",Helvetica,Arial,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--rand:clamp(20px,6.5vw,100px)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;color:var(--ink);font-family:var(--sans);font-weight:300;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .rand{padding-left:var(--rand);padding-right:var(--rand)}
+  header{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding-top:30px;padding-bottom:26px}
+  .logo{font-size:clamp(1.6rem,2.6vw,2.25rem);font-weight:400;letter-spacing:-.035em}
+  .zurueck{color:var(--muted);font-size:1rem;font-weight:400} .zurueck:hover{color:var(--ink)}
+  main{padding-top:90px;padding-bottom:100px;max-width:calc(820px + 2 * var(--rand))}
+  h1{font-size:clamp(2.8rem,6.2vw,6.2rem);font-weight:400;letter-spacing:-.065em;line-height:.95;margin-left:-.04em}
+  .strich{width:90px;height:1px;background:var(--line);margin:34px 0 22px}
+  h2{font-size:1.15rem;font-weight:400;margin-top:38px;margin-bottom:6px}
+  p a{border-bottom:1px solid var(--line)} p a:hover{border-color:var(--ink)}
+  footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:40px;padding-bottom:40px;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+  footer a{margin-left:22px} footer a:hover{color:var(--ink)}
+  :focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+  @media (max-width:760px){ body{font-size:16px} header{padding-top:16px} main{padding-top:50px} footer{flex-direction:column} footer a{margin:0 22px 0 0} }
+</style>
+</head>
+<body>
+<header class="rand">
+  <a href="index.html" class="logo">lukas bärmann</a>
+  <a href="index.html" class="zurueck">← zur startseite</a>
+</header>
+<main class="rand">
+  <h1>impressum</h1>
+  <div class="strich"></div>
+  <h2>Angaben gemäß § 5 DDG</h2>
 <p>Dr. Lukas Bärmann<br>Erwinstraße 32<br>79102 Freiburg im Breisgau</p>
 <h2>Kontakt</h2>
 <p>E-Mail: <a href="mailto:art@lukasbaermann.de">art@lukasbaermann.de</a></p>
@@ -8,4 +42,10 @@
 <p>Dr. Lukas Bärmann, Anschrift wie oben</p>
 <h2>Urheberrecht</h2>
 <p>Alle auf dieser Website gezeigten Werke und Fotografien sind urheberrechtlich geschützt. Jede Verwendung außerhalb der Grenzen des Urheberrechts bedarf der vorherigen schriftlichen Zustimmung.</p>
-</main></body></html>
+</main>
+<footer class="rand">
+  <span>© copyright 2026 lukas bärmann</span>
+  <span><a href="impressum.html">impressum</a><a href="datenschutz.html">datenschutz</a></span>
+</footer>
+</body>
+</html>

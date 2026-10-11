@@ -11,6 +11,16 @@ Website von Lukas Bärmann, freischaffender Künstler in Freiburg. Reines HTML/C
 | Ausstellungen, Presse       | `index.html`, Abschnitt `#ausstellungen`        |
 | Impressum / Datenschutz     | `impressum.html`, `datenschutz.html`            |
 
+## Seite neu erzeugen
+
+`index.html`, `impressum.html` und `datenschutz.html` werden aus den Skripten in `werkzeug/` erzeugt
+(Werkgruppen, Texte, Ausstellungen stehen dort oben im Skript):
+
+```sh
+python3 werkzeug/seite_bauen.py .
+python3 werkzeug/rechtliches_bauen.py .
+```
+
 ## Veröffentlichen (GitHub Pages)
 
 1. **Settings → Pages**: Source „Deploy from a branch“, Branch `main`, Ordner `/ (root)`.

@@ -6,8 +6,16 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>lukas bärmann – artist</title>
 <meta name="description" content="Lukas Bärmann – freischaffender Künstler in Freiburg im Breisgau. Figurative Zeichnungen in Ölpastellkreide.">
+<link rel="canonical" href="https://lukasbaermann.de/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://lukasbaermann.de/">
 <meta property="og:title" content="lukas bärmann – artist">
-<meta property="og:image" content="https://lukasbaermann.de/bilder/werke/werk-22.jpg">
+<meta property="og:description" content="Figurative Zeichnungen in Ölpastell. Freischaffender Künstler in Freiburg im Breisgau.">
+<meta property="og:image" content="https://lukasbaermann.de/bilder/vorschau.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   /* Keine externen Schriften oder Dienste (DSGVO-freundlich) */
   :root{
@@ -103,6 +111,9 @@
   .gross-ansicht .zeile{margin-top:16px;font-size:.95rem;min-height:1.5em}
   .gross-ansicht .zeile b{font-weight:300}
   .gross-ansicht .zeile span{font-weight:300;color:var(--muted)}
+  .gross-ansicht .anfrage{display:inline-block;margin-top:10px;font-size:.95rem;color:var(--muted);border-bottom:1px solid var(--line);transition:color .2s,border-color .2s}
+  .gross-ansicht .anfrage:hover{color:var(--ink);border-color:var(--ink)}
+  .gross-ansicht .anfrage[hidden]{display:none}
   .gross-ansicht .zu{position:absolute;top:22px;right:28px;font-size:1rem;color:var(--muted)}
   .gross-ansicht .zu:hover{color:var(--ink)}
   .gross-ansicht .pf{position:absolute;top:50%;transform:translateY(-50%);font-size:2rem;font-weight:300;color:var(--muted);padding:20px}
@@ -248,6 +259,7 @@
   <button class="pf l" id="gl" aria-label="vorheriges bild">‹</button>
   <img id="grossbild" alt="">
   <p class="zeile"><b id="grosstitel"></b> <span id="grosstechnik"></span></p>
+  <a class="anfrage" id="anfrage" href="mailto:art@lukasbaermann.de">anfragen</a>
   <button class="pf r" id="gr" aria-label="nächstes bild">›</button>
 </div>
 
@@ -262,6 +274,8 @@
   let gListe=[], gi=0, gWerk=false; const offen=()=>gross.classList.contains('offen');
   function oeffnen(liste,i,werk){gListe=liste;gWerk=werk;gi=(i+liste.length)%liste.length;const w=liste[gi];
     gb.src=w.src;gb.alt=w.t;gt.textContent=werk?w.t:'';gtech.textContent=werk?'– Ölpastell auf Malpapier, A3':'';
+    const an=document.getElementById('anfrage'); an.hidden=!werk;
+    if(werk) an.href='mailto:art@lukasbaermann.de?subject='+encodeURIComponent('Anfrage: '+w.t)+'&body='+encodeURIComponent('Hallo Lukas,\n\nich interessiere mich für dein Werk „'+w.t+'“ (Ölpastell auf Malpapier, A3).\n\n');
     gross.classList.add('offen');if(werk&&w.id)history.replaceState(null,'','#'+w.id);}
   function schliessen(){gross.classList.remove('offen');history.replaceState(null,'',location.pathname);}
   document.getElementById('zu').onclick=schliessen;
