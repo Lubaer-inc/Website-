@@ -46,26 +46,29 @@
   .slot img{width:100%;height:auto;aspect-ratio:1216/1600;object-fit:cover}
   .slot figcaption{font-size:.95rem;font-weight:600;padding:12px var(--rand) 0 calc(var(--rand) * .35)}
   .slot figcaption::after{content:"ölpastellkreide auf malpapier, a3";display:block;font-weight:300;color:var(--muted)}
-  .steuerung{display:flex;align-items:center;gap:26px;margin-top:34px;font-size:1rem}
-  .steuerung button{color:var(--muted);transition:color .2s}
-  .steuerung button:hover{color:var(--ink)}
-  .punkte{display:flex;gap:9px}
+  .pfeil{position:absolute;top:0;bottom:0;width:12%;min-width:60px;display:flex;align-items:center;justify-content:center;z-index:3;opacity:0;transition:opacity .3s}
+  .pfeil svg{width:44px;height:44px;stroke:#141414;stroke-width:1.2;fill:none;opacity:.45;transition:opacity .2s}
+  .pfeil.links{left:0} .pfeil.rechts{right:0}
+  .buehne:hover .pfeil{opacity:1}
+  .pfeil:hover svg{opacity:.85}
+  @media (hover:none){ .pfeil{opacity:1} .pfeil svg{opacity:.35} }
+  .punkte{display:flex;justify-content:center;gap:10px;margin-top:30px}
   .punkte button{width:7px;height:7px;border-radius:50%;background:var(--line);padding:0}
   .punkte button.aktiv{background:var(--ink)}
-  .zaehler{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 
   /* Fotos wie auf der Portfolio-Titelseite */
-  .fotos{display:grid;grid-template-columns:344fr 154fr;grid-template-rows:231fr 263fr;gap:18px;aspect-ratio:516/515;max-width:1000px;margin-top:70px}
+  .fotos{display:grid;grid-template-columns:minmax(0,344fr) minmax(0,154fr);grid-template-rows:minmax(0,231fr) minmax(0,263fr);gap:18px;height:calc(100vh - 60px);min-height:520px;margin-top:90px}
   .fotos img{width:100%;height:100%;object-fit:cover}
   .fotos .gross{grid-row:1 / span 2}
 
   /* Arbeitsweise */
-  .text{max-width:760px;font-size:1.12rem;font-weight:300;line-height:1.6}
-  .prozess{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:900px;margin-top:60px}
+  .zweispaltig{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(30px,6vw,110px);align-items:start}
+  .text{font-size:1.12rem;font-weight:300;line-height:1.6;max-width:640px}
+  .prozess{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:88%;justify-self:end}
   .prozess img{width:100%;aspect-ratio:1/1;object-fit:cover}
 
   /* Listen */
-  .liste{list-style:none;max-width:900px}
+  .liste{list-style:none}
   .liste li{display:grid;grid-template-columns:110px 1fr;gap:20px;padding:16px 0}
   .liste .jahr{font-family:var(--mono);font-size:.85rem;color:var(--muted);padding-top:4px}
   .liste strong{font-weight:600}
@@ -75,10 +78,12 @@
   h3{font-size:1.35rem;font-weight:400;letter-spacing:-.02em;margin-top:70px}
 
   /* Kontakt */
-  #kontakt{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding-bottom:60px}
-  .kontaktliste{list-style:none;font-size:1.2rem;line-height:1.75}
-  .kontaktliste a:hover{color:var(--muted)}
-  .kontaktbild{justify-self:end;width:100%;max-width:620px}
+  #kontakt{padding-bottom:100px}
+  #kontakt p{font-weight:300;font-size:1.12rem;max-width:640px}
+  .mail{display:inline-block;margin-top:26px;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:300;letter-spacing:-.02em;border-bottom:1px solid var(--ink)}
+  .mail:hover{color:var(--muted);border-color:var(--muted)}
+  .insta{display:block;margin-top:16px;color:var(--muted)}
+  .insta:hover{color:var(--ink)}
 
   footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:40px;padding-bottom:40px;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
   footer a{margin-left:22px}
@@ -103,12 +108,12 @@
     nav{gap:18px;flex-wrap:wrap}
     section{padding-top:80px}
     .slot figcaption{padding-left:var(--rand)}
-    .punkte{display:none}
     .fotos{gap:8px}
     .prozess{gap:6px}
     .liste li{grid-template-columns:1fr;gap:2px}
-    #kontakt{grid-template-columns:1fr}
-    .kontaktbild{justify-self:center;max-width:420px}
+    .zweispaltig{grid-template-columns:1fr}
+    .prozess{width:100%}
+    .fotos{height:auto;aspect-ratio:516/515;min-height:0}
   }
   @media (prefers-reduced-motion:reduce){ .reihe{transition:none} html{scroll-behavior:auto} }
 </style>
@@ -128,27 +133,24 @@
 <main>
   <section id="werke" aria-label="werke">
     <div class="buehne">
+      <button class="pfeil links" id="zurueck" aria-label="vorherige werke"><svg viewBox="0 0 24 24"><path d="M15 4 7 12l8 8"/></svg></button>
+      <button class="pfeil rechts" id="weiter" aria-label="nächste werke"><svg viewBox="0 0 24 24"><path d="M9 4l8 8-8 8"/></svg></button>
       <div class="reihe" id="reihe">
         <figure class="slot">
           <button class="bildknopf" aria-label="Nordlichter groß ansehen"><img src="bilder/werke/werk-22.jpg" alt="Nordlichter" width="1216" height="1600"></button>
           <figcaption>Nordlichter</figcaption>
         </figure>
         <figure class="slot">
-          <button class="bildknopf" aria-label="Sonntagsausfahrt groß ansehen"><img src="bilder/werke/werk-23.jpg" alt="Sonntagsausfahrt" width="1216" height="1600"></button>
-          <figcaption>Sonntagsausfahrt</figcaption>
-        </figure>
-        <figure class="slot">
           <button class="bildknopf" aria-label="at Bächle groß ansehen"><img src="bilder/werke/werk-18.jpg" alt="at Bächle" width="1216" height="1600"></button>
           <figcaption>at Bächle</figcaption>
         </figure>
+        <figure class="slot">
+          <button class="bildknopf" aria-label="Junge Väter groß ansehen"><img src="bilder/werke/werk-16.jpg" alt="Junge Väter" width="1216" height="1600"></button>
+          <figcaption>Junge Väter</figcaption>
+        </figure>
       </div>
     </div>
-    <div class="steuerung rand">
-      <button id="zurueck" aria-label="vorherige werke">zurück</button>
-      <div class="punkte" id="punkte"></div>
-      <button id="weiter" aria-label="nächste werke">weiter</button>
-      <span class="zaehler" id="zaehler"></span>
-    </div>
+    <div class="punkte" id="punkte"></div>
     <div class="rand">
       <div class="fotos">
         <img class="gross" src="bilder/titel/portrait.jpg" alt="Lukas Bärmann" loading="lazy">
@@ -162,6 +164,7 @@
     <h2 class="titel">arbeitsweise</h2>
     <p class="unterzeile">motive und vorgehen.</p>
     <div class="strich"></div>
+    <div class="zweispaltig">
     <p class="text">Ausgangspunkt meiner Arbeiten sind häufig beiläufige Situationen und Körperhaltungen, die ich im Alltag beobachte oder fotografisch festhalte. In der Zeichnung löse ich die Figuren zunehmend aus ihrem ursprünglichen Umfeld. Dabei geht es mir weniger um eine genaue Wiedergabe als um die Haltung, die Beziehung der Personen zueinander und die Stimmung des beobachteten Moments. Aus dieser Reduktion entwickelt sich anschließend die malerische Arbeit. Meine Werke entstehen in unterschiedlichen Techniken. Neben Acryl- und Ölmalereien bilden Zeichnungen mit Ölpastellkreide auf Leinwand oder Malkarton einen besonderen Schwerpunkt.</p>
     <div class="prozess">
         <img src="bilder/atelier/prozess-1.jpg" alt="Arbeitsprozess 1" loading="lazy">
@@ -173,6 +176,7 @@
         <img src="bilder/atelier/prozess-7.jpg" alt="Arbeitsprozess 7" loading="lazy">
         <img src="bilder/atelier/prozess-8.jpg" alt="Arbeitsprozess 8" loading="lazy">
         <img src="bilder/atelier/prozess-9.jpg" alt="Arbeitsprozess 9" loading="lazy">
+    </div>
     </div>
   </section>
 
@@ -198,16 +202,11 @@
   </section>
 
   <section id="kontakt" class="rand">
-    <div>
-      <h2 class="titel">kontakt</h2>
-      <p class="unterzeile">so erreichst du mich.</p>
-      <div class="strich"></div>
-      <ul class="kontaktliste">
-        <li><a href="mailto:art@lukasbaermann.de">mail</a></li>
-        <li><a href="https://www.instagram.com/lukasbaermann/" target="_blank" rel="noopener">instagram</a></li>
-      </ul>
-    </div>
-    <img class="kontaktbild" src="bilder/titel/kontakt.webp" alt="at Bächle, Ölpastellkreide" loading="lazy" width="1005" height="1300">
+    <h2 class="titel">kontakt</h2>
+    <div class="strich"></div>
+    <p>Für Anfragen zu Werken, Ankäufen, Aufträgen oder Ausstellungen freue ich mich über eine Nachricht.</p>
+    <a class="mail" href="mailto:art@lukasbaermann.de">art@lukasbaermann.de</a>
+    <a class="insta" href="https://www.instagram.com/lukasbaermann/" target="_blank" rel="noopener">instagram: @lukasbaermann</a>
   </section>
 </main>
 
@@ -225,13 +224,13 @@
 </div>
 
 <script>
-  const WERKE=[{"t": "Nordlichter", "src": "bilder/werke/werk-22.jpg", "th": "bilder/werke/werk-22-klein.jpg", "id": "werk-nordlichter"}, {"t": "Sonntagsausfahrt", "src": "bilder/werke/werk-23.jpg", "th": "bilder/werke/werk-23-klein.jpg", "id": "werk-sonntagsausfahrt"}, {"t": "at Bächle", "src": "bilder/werke/werk-18.jpg", "th": "bilder/werke/werk-18-klein.jpg", "id": "werk-at-baechle"}, {"t": "Junge Väter", "src": "bilder/werke/werk-16.jpg", "th": "bilder/werke/werk-16-klein.jpg", "id": "werk-junge-vaeter"}, {"t": "ZMF 2", "src": "bilder/werke/werk-21.jpg", "th": "bilder/werke/werk-21-klein.jpg", "id": "werk-zmf-2"}, {"t": "ZMF 1", "src": "bilder/werke/werk-19.jpg", "th": "bilder/werke/werk-19-klein.jpg", "id": "werk-zmf-1"}, {"t": "Casa di pietra", "src": "bilder/werke/werk-13.jpg", "th": "bilder/werke/werk-13-klein.jpg", "id": "werk-casa-di-pietra"}, {"t": "Erwartungen", "src": "bilder/werke/werk-12.jpg", "th": "bilder/werke/werk-12-klein.jpg", "id": "werk-erwartungen"}, {"t": "Grechetto", "src": "bilder/werke/werk-01.jpg", "th": "bilder/werke/werk-01-klein.jpg", "id": "werk-grechetto"}, {"t": "Schröders", "src": "bilder/werke/werk-06.jpg", "th": "bilder/werke/werk-06-klein.jpg", "id": "werk-schroeders"}, {"t": "Stammtisch", "src": "bilder/werke/werk-07.jpg", "th": "bilder/werke/werk-07-klein.jpg", "id": "werk-stammtisch"}, {"t": "Despedida", "src": "bilder/werke/werk-14.jpg", "th": "bilder/werke/werk-14-klein.jpg", "id": "werk-despedida"}, {"t": "Gedanken an Sophia Loren", "src": "bilder/werke/werk-11.jpg", "th": "bilder/werke/werk-11-klein.jpg", "id": "werk-gedanken-an-sophia-loren"}, {"t": "Kraniche", "src": "bilder/werke/werk-10.jpg", "th": "bilder/werke/werk-10-klein.jpg", "id": "werk-kraniche"}, {"t": "Akt mit rotem Handtuch", "src": "bilder/werke/werk-09.jpg", "th": "bilder/werke/werk-09-klein.jpg", "id": "werk-akt-mit-rotem-handtuch"}, {"t": "Der zweifache Eros", "src": "bilder/werke/werk-08.jpg", "th": "bilder/werke/werk-08-klein.jpg", "id": "werk-der-zweifache-eros"}, {"t": "Das Schöne", "src": "bilder/werke/werk-04.jpg", "th": "bilder/werke/werk-04-klein.jpg", "id": "werk-das-schoene"}, {"t": "Sommerabend", "src": "bilder/werke/werk-20.jpg", "th": "bilder/werke/werk-20-klein.jpg", "id": "werk-sommerabend"}, {"t": "Zigarettenpause", "src": "bilder/werke/werk-03.jpg", "th": "bilder/werke/werk-03-klein.jpg", "id": "werk-zigarettenpause"}, {"t": "Self care", "src": "bilder/werke/werk-17.jpg", "th": "bilder/werke/werk-17-klein.jpg", "id": "werk-self-care"}, {"t": "Nach dem Tanzen", "src": "bilder/werke/werk-05.jpg", "th": "bilder/werke/werk-05-klein.jpg", "id": "werk-nach-dem-tanzen"}, {"t": "Untitled", "src": "bilder/werke/werk-25.jpg", "th": "bilder/werke/werk-25-klein.jpg", "id": "werk-untitled"}];
-  const reihe=document.getElementById('reihe'), punkte=document.getElementById('punkte'), zaehler=document.getElementById('zaehler');
+  const WERKE=[{"t": "Nordlichter", "src": "bilder/werke/werk-22.jpg", "th": "bilder/werke/werk-22-klein.jpg", "id": "werk-nordlichter"}, {"t": "at Bächle", "src": "bilder/werke/werk-18.jpg", "th": "bilder/werke/werk-18-klein.jpg", "id": "werk-at-baechle"}, {"t": "Junge Väter", "src": "bilder/werke/werk-16.jpg", "th": "bilder/werke/werk-16-klein.jpg", "id": "werk-junge-vaeter"}, {"t": "ZMF 2", "src": "bilder/werke/werk-21.jpg", "th": "bilder/werke/werk-21-klein.jpg", "id": "werk-zmf-2"}, {"t": "ZMF 1", "src": "bilder/werke/werk-19.jpg", "th": "bilder/werke/werk-19-klein.jpg", "id": "werk-zmf-1"}, {"t": "Sonntagsausfahrt", "src": "bilder/werke/werk-23.jpg", "th": "bilder/werke/werk-23-klein.jpg", "id": "werk-sonntagsausfahrt"}, {"t": "Casa di pietra", "src": "bilder/werke/werk-13.jpg", "th": "bilder/werke/werk-13-klein.jpg", "id": "werk-casa-di-pietra"}, {"t": "Grechetto", "src": "bilder/werke/werk-01.jpg", "th": "bilder/werke/werk-01-klein.jpg", "id": "werk-grechetto"}, {"t": "Erwartungen", "src": "bilder/werke/werk-12.jpg", "th": "bilder/werke/werk-12-klein.jpg", "id": "werk-erwartungen"}, {"t": "Schröders", "src": "bilder/werke/werk-06.jpg", "th": "bilder/werke/werk-06-klein.jpg", "id": "werk-schroeders"}, {"t": "Untitled", "src": "bilder/werke/werk-25.jpg", "th": "bilder/werke/werk-25-klein.jpg", "id": "werk-untitled"}, {"t": "Stammtisch", "src": "bilder/werke/werk-07.jpg", "th": "bilder/werke/werk-07-klein.jpg", "id": "werk-stammtisch"}, {"t": "Gedanken an Sophia Loren", "src": "bilder/werke/werk-11.jpg", "th": "bilder/werke/werk-11-klein.jpg", "id": "werk-gedanken-an-sophia-loren"}, {"t": "Kraniche", "src": "bilder/werke/werk-10.jpg", "th": "bilder/werke/werk-10-klein.jpg", "id": "werk-kraniche"}, {"t": "Despedida", "src": "bilder/werke/werk-14.jpg", "th": "bilder/werke/werk-14-klein.jpg", "id": "werk-despedida"}, {"t": "Akt mit rotem Handtuch", "src": "bilder/werke/werk-09.jpg", "th": "bilder/werke/werk-09-klein.jpg", "id": "werk-akt-mit-rotem-handtuch"}, {"t": "Der zweifache Eros", "src": "bilder/werke/werk-08.jpg", "th": "bilder/werke/werk-08-klein.jpg", "id": "werk-der-zweifache-eros"}, {"t": "Sommerabend", "src": "bilder/werke/werk-20.jpg", "th": "bilder/werke/werk-20-klein.jpg", "id": "werk-sommerabend"}, {"t": "Zigarettenpause", "src": "bilder/werke/werk-03.jpg", "th": "bilder/werke/werk-03-klein.jpg", "id": "werk-zigarettenpause"}, {"t": "Selicare", "src": "bilder/werke/werk-17.jpg", "th": "bilder/werke/werk-17-klein.jpg", "id": "werk-selicare"}, {"t": "Nach dem Tanzen", "src": "bilder/werke/werk-05.jpg", "th": "bilder/werke/werk-05-klein.jpg", "id": "werk-nach-dem-tanzen"}];
+  const reihe=document.getElementById('reihe'), punkte=document.getElementById('punkte');
   const ruhig=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let proSeite=3, seite=0, timer=null, pause=false;
 
   const seiten=()=>Math.ceil(WERKE.length/proSeite);
-  const werkIndex=(s,k)=>(s*proSeite+k)%WERKE.length;   // letzte Gruppe wird von vorne aufgefüllt
+  const werkIndex=(s,k)=>(s*proSeite+k)%WERKE.length;   // Werke stehen in Gruppenreihenfolge
 
   function slotsBauen(){
     reihe.style.setProperty('--n',proSeite);
@@ -252,7 +251,6 @@
       f.querySelector('.bildknopf').setAttribute('aria-label',w.t+' groß ansehen');});
     reihe.classList.remove('weg');
     punkte.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('aktiv',i===seite));
-    zaehler.textContent=String(seite+1).padStart(2,'0')+' / '+String(seiten()).padStart(2,'0');
     // nächste Gruppe vorladen
     for(let k=0;k<proSeite;k++) laden(WERKE[werkIndex(seite+1,k)].src);
   }
