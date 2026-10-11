@@ -32,6 +32,12 @@
   nav{display:flex;gap:28px;font-size:1rem}
   nav a{color:var(--muted);transition:color .2s}
   nav a:hover,nav a.aktiv{color:var(--ink)}
+  .burger{display:none;width:44px;height:44px;margin-right:-10px;position:relative}
+  .burger span{position:absolute;left:10px;right:10px;height:1.5px;background:var(--ink);transition:transform .3s,opacity .3s}
+  .burger span:nth-child(1){top:15px} .burger span:nth-child(2){top:21px} .burger span:nth-child(3){top:27px}
+  .menue-offen .burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .menue-offen .burger span:nth-child(2){opacity:0}
+  .menue-offen .burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
   /* Abschnitte */
   section{padding-top:140px;padding-bottom:20px;scroll-margin-top:20px}
@@ -105,8 +111,12 @@
 
   @media (max-width:760px){
     body{font-size:16px}
-    header{flex-direction:column;gap:14px;padding-top:20px;padding-bottom:16px}
-    nav{gap:18px;flex-wrap:wrap}
+    header{align-items:center;padding-top:16px;padding-bottom:14px;flex-wrap:wrap}
+    .burger{display:block}
+    nav{display:none;flex-basis:100%;flex-direction:column;gap:0;padding:18px 0 10px}
+    .menue-offen nav{display:flex}
+    nav a{font-size:1.6rem;font-weight:300;letter-spacing:-.02em;padding:6px 0;color:var(--ink)}
+    nav a.aktiv{color:var(--muted)}
     section{padding-top:80px}
     .liste li{grid-template-columns:1fr;gap:2px}
     .zeile-foto,.zeile-foto.gespiegelt{grid-template-columns:1fr}
@@ -120,7 +130,8 @@
 
 <header class="rand">
   <a href="#" class="logo">lukas bärmann</a>
-  <nav>
+  <button class="burger" aria-label="menü öffnen" aria-expanded="false" aria-controls="menue"><span></span><span></span><span></span></button>
+  <nav id="menue">
     <a href="#werke">werke</a>
     <a href="#arbeitsweise">arbeitsweise</a>
     <a href="#ausstellungen">ausstellungen</a>
@@ -312,7 +323,11 @@
 
   // Kopfzeile: beim Runterscrollen ausblenden, beim Hochscrollen zeigen
   const kopf=document.querySelector('header'); let yAlt=scrollY;
-  addEventListener('scroll',()=>{const y=scrollY; kopf.classList.toggle('versteckt',y>yAlt&&y>120); yAlt=y;},{passive:true});
+  const burger=document.querySelector('.burger');
+  function menue(auf){kopf.classList.toggle('menue-offen',auf);burger.setAttribute('aria-expanded',auf);burger.setAttribute('aria-label',auf?'menü schließen':'menü öffnen');}
+  burger.onclick=()=>menue(!kopf.classList.contains('menue-offen'));
+  document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>menue(false)));
+  addEventListener('scroll',()=>{const y=scrollY; if(!kopf.classList.contains('menue-offen'))kopf.classList.toggle('versteckt',y>yAlt&&y>120); yAlt=y;},{passive:true});
   // aktuellen Abschnitt im Menü markieren
   const links=[...document.querySelectorAll('nav a')];
   const beobachter=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('aktiv',a.getAttribute('href')==='#'+e.target.id));}),
