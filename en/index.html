@@ -355,12 +355,14 @@
     function bauen(){
       reihe.style.setProperty('--n',proSeite);
       reihe.classList.toggle('band',band());
-      const anzahl=band()?liste.length:proSeite;
+      const n=liste.length, anzahl=band()?n+2:proSeite;   // Band: [Klon letztes] Werke… [Klon erstes]
       reihe.innerHTML=Array.from({length:anzahl},slotHtml).join('');
-      reihe.querySelectorAll('.bildknopf').forEach((b,k)=>b.onclick=()=>oeffnen(liste,band()?k:idx(seite,k),werk));
+      const echt=k=>(k-1+n)%n;
+      reihe.querySelectorAll('.bildknopf').forEach((b,k)=>b.onclick=()=>oeffnen(liste,band()?echt(k):idx(seite,k),werk));
       if(band()){
-        reihe.querySelectorAll('.slot').forEach((f,k)=>{const w=liste[k],img=f.querySelector('img');
-          if(k>1)img.loading='lazy'; img.sizes='100vw'; img.srcset=w.th+' 532w, '+w.src+' 1216w'; img.src=w.th; beschriften(f,w);});
+        reihe.querySelectorAll('.slot').forEach((f,k)=>{const w=liste[echt(k)],img=f.querySelector('img');
+          if(k>2&&k<n+1)img.loading='lazy'; img.sizes='100vw'; img.srcset=w.th+' 532w, '+w.src+' 1216w'; img.src=w.th; beschriften(f,w);
+          if(k===0||k===n+1)f.setAttribute('aria-hidden','true');});
       }
       stueck=Math.max(REG/seiten(),14); linie.style.width=stueck+'px';
       punkte.innerHTML=Array.from({length:seiten()},(_,i)=>`<button aria-label="group ${i+1}"></button>`).join('');
@@ -368,12 +370,14 @@
     }
     function linieSetzen(anteil){ linie.style.left=(Math.min(1,Math.max(0,anteil))*(REG-stueck))+'px'; }
     async function zeige(s,sofort=false){
-      seite=(s+seiten())%seiten();
       if(band()){
-        reihe.scrollTo({left:seite*reihe.clientWidth,behavior:(sofort||ruhig)?'auto':'smooth'});
-        if(sofort) linieSetzen(seiten()>1?seite/(seiten()-1):0);
+        // s darf -1 bzw. n sein: dann wird zum Klon geblättert und danach unsichtbar ans andere Ende gesprungen
+        const n=seiten(); s=Math.max(-1,Math.min(n,s)); seite=(s+n)%n;
+        reihe.scrollTo({left:(s+1)*reihe.clientWidth,behavior:(sofort||ruhig)?'instant':'smooth'});
+        if(sofort) linieSetzen(n>1?seite/(n-1):0);
         return;
       }
+      seite=(s+seiten())%seiten();
       const ws=Array.from({length:proSeite},(_,k)=>liste[idx(seite,k)]);
       const fertig=Promise.all(ws.map(w=>laden(datei(w))));
       if(!sofort&&!ruhig){reihe.classList.add('weg');await new Promise(r=>setTimeout(r,700));}
@@ -385,14 +389,22 @@
       for(let k=0;k<proSeite;k++) laden(datei(liste[idx(seite+1,k)]));
     }
     // Band: Linie folgt dem Wischen fließend
+    let ruheTimer=null;
+    function nachDemBlaettern(){ if(!band()||zieht)return; const W=reihe.clientWidth, n=seiten(), pos=Math.round(reihe.scrollLeft/W);
+      if(pos===0) reihe.scrollTo({left:n*W,behavior:'instant'});          // vom Anfang rückwärts -> letztes Werk
+      else if(pos===n+1) reihe.scrollTo({left:W,behavior:'instant'});     // über das Ende hinaus -> wieder von vorne
+    }
     reihe.addEventListener('scroll',()=>{ if(!band())return;
-      const max=reihe.scrollWidth-reihe.clientWidth; linieSetzen(max>0?reihe.scrollLeft/max:0);
-      seite=Math.round(reihe.scrollLeft/Math.max(1,reihe.clientWidth)); },{passive:true});
+      const W=Math.max(1,reihe.clientWidth), n=seiten(), lage=reihe.scrollLeft/W-1;
+      linieSetzen(n>1?lage/(n-1):0);
+      seite=((Math.round(lage)%n)+n)%n;
+      clearTimeout(ruheTimer); ruheTimer=setTimeout(nachDemBlaettern,140); },{passive:true});
+    reihe.addEventListener('scrollend',nachDemBlaettern);
     // Linie als Schieberegler
     let zieht=false;
     function ziehen(e){ const r=regler.getBoundingClientRect();
       const anteil=Math.min(1,Math.max(0,(e.clientX-r.left-stueck/2)/(REG-stueck)));
-      if(band()) reihe.scrollLeft=anteil*(reihe.scrollWidth-reihe.clientWidth);
+      if(band()) reihe.scrollLeft=(1+anteil*(seiten()-1))*reihe.clientWidth;
       else { linieSetzen(anteil); } return anteil; }
     regler.addEventListener('pointerdown',e=>{ zieht=true; pause=true; regler.classList.add('zieht'); regler.setPointerCapture(e.pointerId);
       reihe.style.scrollSnapType='none'; ziehen(e); });
