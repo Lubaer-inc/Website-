@@ -144,6 +144,10 @@ page = f'''<!doctype html>
   .punkte{{display:flex;justify-content:center;gap:10px;margin-top:30px}}
   .punkte button{{width:7px;height:7px;border-radius:50%;background:var(--line);padding:0}}
   .punkte button.aktiv{{background:var(--ink)}}
+  /* Handy: schmale Fortschrittslinie statt Punkten */
+  .fortschritt{{display:none;position:relative;width:120px;height:1px;background:var(--line);margin:34px auto 0}}
+  .fortschritt span{{position:absolute;top:-.5px;left:0;height:2px;background:var(--ink);transition:left .45s ease,width .45s ease}}
+  @media (max-width:760px){{ .punkte{{display:none}} .fortschritt{{display:block}} }}
 
   /* Arbeitsweise */
   .text{{font-size:clamp(1.1rem,1.5vw,1.35rem);font-weight:300;line-height:1.6;margin-bottom:60px}}
@@ -236,6 +240,7 @@ page = f'''<!doctype html>
         </div>
       </div>
       <div class="punkte"></div>
+      <div class="fortschritt" aria-hidden="true"><span></span></div>
     </div>
   </section>
 
@@ -253,6 +258,7 @@ page = f'''<!doctype html>
         </div>
       </div>
       <div class="punkte"></div>
+      <div class="fortschritt" aria-hidden="true"><span></span></div>
     </div>
   </section>
 
@@ -353,7 +359,7 @@ page = f'''<!doctype html>
       const i=basis.findIndex(w=>w.t==='at Bächle');
       return i<0?basis:[basis[i],...basis.filter((_,k)=>k!==i)]; }};
     let liste=basis;
-    const reihe=el.querySelector('.reihe'), punkte=el.querySelector('.punkte'), buehne=el.querySelector('.buehne');
+    const reihe=el.querySelector('.reihe'), punkte=el.querySelector('.punkte'), buehne=el.querySelector('.buehne'), linie=el.querySelector('.fortschritt span');
     let proSeite=0, seite=0, timer=null, pause=false;
     const seiten=()=>Math.ceil(liste.length/proSeite);
     const idx=(s,k)=>(s*proSeite+k)%liste.length;
@@ -379,6 +385,8 @@ page = f'''<!doctype html>
         f.querySelector('.bildknopf').setAttribute('aria-label',w.t+' groß ansehen');}});
       reihe.classList.remove('weg');
       punkte.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('aktiv',i===seite));
+      {{ const n=seiten(), breit=120, stueck=Math.max(breit/n,14);
+        linie.style.width=stueck+'px'; linie.style.left=(n>1?seite/(n-1)*(breit-stueck):0)+'px'; }}
       for(let k=0;k<proSeite;k++) laden(datei(liste[idx(seite+1,k)]));
     }}
     function neustart(){{clearInterval(timer); if(!ruhig) timer=setInterval(()=>{{
