@@ -32,7 +32,13 @@ PROZESS = [{"t": f"Arbeitsprozess {i}", "src": f"bilder/atelier/prozess-{i}.jpg"
 def slots(liste, klasse, beschriftung):
     out = []
     for d in liste[:3]:
-        cap = f'\n          <figcaption>{html.escape(d["t"])}</figcaption>' if beschriftung else ""
+        if beschriftung:
+            st = ('<span class="status verkauft">verkauft</span>' if d.get("v") else
+                  f'<a class="status" href="mailto:art@lukasbaermann.de?subject=Anfrage%3A%20{html.escape(d["t"])}">anfragen</a>')
+            cap = (f'\n          <figcaption><span class="werktitel">{html.escape(d["t"])}</span>'
+                   f'<span class="technik">{TECHNIK}</span>{st}</figcaption>')
+        else:
+            cap = ""
         out.append(f'''        <figure class="slot {klasse}">
           <button class="bildknopf" aria-label="{html.escape(d["t"])} groß ansehen"><img src="{d["th"]}" alt="{html.escape(d["t"])}"></button>{cap}
         </figure>''')
@@ -124,7 +130,11 @@ page = f'''<!doctype html>
   .slot.werk img{{aspect-ratio:1216/1600}}
   .slot.foto img{{aspect-ratio:1/1}}
   .slot figcaption{{font-size:.95rem;font-weight:300;text-align:center;padding:14px 16px 0}}
-  .slot figcaption::after{{content:"{TECHNIK}";display:block;font-weight:300;color:var(--muted)}}
+  .slot .werktitel,.slot .technik{{display:block}}
+  .slot .technik{{color:var(--muted)}}
+  .slot .status{{display:inline-block;margin-top:6px;font-size:.78rem;color:var(--muted);letter-spacing:.01em;border-bottom:1px solid var(--line);transition:color .2s,border-color .2s}}
+  .slot a.status:hover{{color:var(--ink);border-color:var(--ink)}}
+  .slot .status.verkauft{{border-bottom-color:transparent}}
   .pfeil{{position:absolute;top:0;bottom:0;width:12%;min-width:60px;display:flex;align-items:center;justify-content:center;z-index:3;opacity:0;transition:opacity .3s}}
   .pfeil svg{{width:44px;height:44px;stroke:#141414;stroke-width:1.2;fill:none;opacity:.45;transition:opacity .2s}}
   .pfeil.links{{left:0}} .pfeil.rechts{{right:0}}
@@ -309,6 +319,7 @@ page = f'''<!doctype html>
 <script>
   const QUELLEN={{werke:{json.dumps(WERKE, ensure_ascii=False)}, prozess:{json.dumps(PROZESS, ensure_ascii=False)}}};
   const ruhig=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function mailHref(w){{return 'mailto:art@lukasbaermann.de?subject='+encodeURIComponent('Anfrage: '+w.t)+'&body='+encodeURIComponent('Hallo Lukas,\\n\\nich interessiere mich für dein Werk „'+w.t+'“ ({TECHNIK}).\\n\\n');}}
   function laden(src){{return new Promise(r=>{{const i=new Image();i.onload=i.onerror=r;i.src=src;}});}}
 
   // Großansicht (für Werke mit Titel, für Fotos ohne)
@@ -320,7 +331,7 @@ page = f'''<!doctype html>
     const an=document.getElementById('anfrage'); an.hidden=!werk;
     an.textContent=(werk&&w.v)?an.dataset.verkauft:an.dataset.anfragen; an.classList.toggle('verkauft',!!(werk&&w.v));
     if(werk&&w.v) an.removeAttribute('href');
-    if(werk&&!w.v) an.href='mailto:art@lukasbaermann.de?subject='+encodeURIComponent('Anfrage: '+w.t)+'&body='+encodeURIComponent('Hallo Lukas,\\n\\nich interessiere mich für dein Werk „'+w.t+'“ ({TECHNIK}).\\n\\n');
+    if(werk&&!w.v) an.href=mailHref(w);
     gross.classList.add('offen');if(werk&&w.id)history.replaceState(null,'','#'+w.id);}}
   function schliessen(){{gross.classList.remove('offen');history.replaceState(null,'',location.pathname);}}
   document.getElementById('zu').onclick=schliessen;
@@ -345,7 +356,7 @@ page = f'''<!doctype html>
     const datei=w=>(werk&&innerWidth*devicePixelRatio/proSeite>560)?w.src:w.th;
     function bauen(){{
       reihe.style.setProperty('--n',proSeite);
-      reihe.innerHTML=Array.from({{length:proSeite}},()=>`<figure class="slot ${{art}}"><button class="bildknopf"><img alt=""></button>${{werk?'<figcaption></figcaption>':''}}</figure>`).join('');
+      reihe.innerHTML=Array.from({{length:proSeite}},()=>`<figure class="slot ${{art}}"><button class="bildknopf"><img alt=""></button>${{werk?'<figcaption><span class="werktitel"></span><span class="technik">{TECHNIK}</span><span class="status-platz"></span></figcaption>':''}}</figure>`).join('');
       reihe.querySelectorAll('.bildknopf').forEach((b,k)=>b.onclick=()=>oeffnen(liste,idx(seite,k),werk));
       punkte.innerHTML=Array.from({{length:seiten()}},(_,i)=>`<button aria-label="gruppe ${{i+1}}"></button>`).join('');
       punkte.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{{zeige(i);neustart();}});
@@ -357,7 +368,10 @@ page = f'''<!doctype html>
       if(!sofort&&!ruhig){{reihe.classList.add('weg');await new Promise(r=>setTimeout(r,700));}}
       await fertig;
       reihe.querySelectorAll('.slot').forEach((f,k)=>{{const w=ws[k],img=f.querySelector('img');
-        img.src=datei(w);img.alt=w.t;const c=f.querySelector('figcaption');if(c)c.textContent=w.t;
+        img.src=datei(w);img.alt=w.t;const c=f.querySelector('figcaption');if(c){{c.querySelector('.werktitel').textContent=w.t;
+          const lab=document.getElementById('anfrage').dataset, pl=c.querySelector('.status-platz');
+          pl.innerHTML=w.v?'<span class="status verkauft"></span>':'<a class="status"></a>';
+          const s=pl.firstChild; s.textContent=w.v?lab.verkauft:lab.anfragen; if(!w.v)s.href=mailHref(w);}}
         f.querySelector('.bildknopf').setAttribute('aria-label',w.t+' groß ansehen');}});
       reihe.classList.remove('weg');
       punkte.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('aktiv',i===seite));

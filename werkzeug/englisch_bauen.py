@@ -60,6 +60,8 @@ ersetze('aria-label="vorheriges bild"', 'aria-label="previous image"')
 ersetze('aria-label="nächstes bild"', 'aria-label="next image"')
 ersetze('data-anfragen="anfragen" data-verkauft="verkauft"', 'data-anfragen="enquire" data-verkauft="sold"')
 ersetze('>anfragen</a>', '>enquire</a>')
+ersetze('>verkauft</span>', '>sold</span>', mindestens=0)
+ersetze('subject=Anfrage%3A%20', 'subject=Enquiry%3A%20', mindestens=0)
 ersetze("encodeURIComponent('Anfrage: '+w.t)", "encodeURIComponent('Enquiry: '+w.t)")
 ersetze("encodeURIComponent('Hallo Lukas,\\n\\nich interessiere mich für dein Werk „'+w.t+'“ (Oil pastel on drawing paper, A3).\\n\\n')",
         "encodeURIComponent('Hello Lukas,\\n\\nI am interested in your work “'+w.t+'” (oil pastel on drawing paper, A3).\\n\\n')")

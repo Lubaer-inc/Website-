@@ -78,7 +78,11 @@
   .slot.werk img{aspect-ratio:1216/1600}
   .slot.foto img{aspect-ratio:1/1}
   .slot figcaption{font-size:.95rem;font-weight:300;text-align:center;padding:14px 16px 0}
-  .slot figcaption::after{content:"Oil pastel on drawing paper, A3";display:block;font-weight:300;color:var(--muted)}
+  .slot .werktitel,.slot .technik{display:block}
+  .slot .technik{color:var(--muted)}
+  .slot .status{display:inline-block;margin-top:6px;font-size:.78rem;color:var(--muted);letter-spacing:.01em;border-bottom:1px solid var(--line);transition:color .2s,border-color .2s}
+  .slot a.status:hover{color:var(--ink);border-color:var(--ink)}
+  .slot .status.verkauft{border-bottom-color:transparent}
   .pfeil{position:absolute;top:0;bottom:0;width:12%;min-width:60px;display:flex;align-items:center;justify-content:center;z-index:3;opacity:0;transition:opacity .3s}
   .pfeil svg{width:44px;height:44px;stroke:#141414;stroke-width:1.2;fill:none;opacity:.45;transition:opacity .2s}
   .pfeil.links{left:0} .pfeil.rechts{right:0}
@@ -178,15 +182,15 @@
         <div class="reihe">
         <figure class="slot werk">
           <button class="bildknopf" aria-label="Nordlichter – view large"><img src="../bilder/werke/werk-22-klein.jpg" alt="Nordlichter"></button>
-          <figcaption>Nordlichter</figcaption>
+          <figcaption><span class="werktitel">Nordlichter</span><span class="technik">Oil pastel on drawing paper, A3</span><a class="status" href="mailto:art@lukasbaermann.de?subject=Enquiry%3A%20Nordlichter">enquire</a></figcaption>
         </figure>
         <figure class="slot werk">
           <button class="bildknopf" aria-label="at Bächle – view large"><img src="../bilder/werke/werk-18-klein.jpg" alt="at Bächle"></button>
-          <figcaption>at Bächle</figcaption>
+          <figcaption><span class="werktitel">at Bächle</span><span class="technik">Oil pastel on drawing paper, A3</span><a class="status" href="mailto:art@lukasbaermann.de?subject=Enquiry%3A%20at Bächle">enquire</a></figcaption>
         </figure>
         <figure class="slot werk">
           <button class="bildknopf" aria-label="Junge Väter – view large"><img src="../bilder/werke/werk-16-klein.jpg" alt="Junge Väter"></button>
-          <figcaption>Junge Väter</figcaption>
+          <figcaption><span class="werktitel">Junge Väter</span><span class="technik">Oil pastel on drawing paper, A3</span><a class="status" href="mailto:art@lukasbaermann.de?subject=Enquiry%3A%20Junge Väter">enquire</a></figcaption>
         </figure>
         </div>
       </div>
@@ -284,6 +288,7 @@
 <script>
   const QUELLEN={werke:[{"t": "Nordlichter", "src": "../bilder/werke/werk-22.jpg", "th": "../bilder/werke/werk-22-klein.jpg", "id": "werk-nordlichter", "v": false}, {"t": "at Bächle", "src": "../bilder/werke/werk-18.jpg", "th": "../bilder/werke/werk-18-klein.jpg", "id": "werk-at-baechle", "v": false}, {"t": "Junge Väter", "src": "../bilder/werke/werk-16.jpg", "th": "../bilder/werke/werk-16-klein.jpg", "id": "werk-junge-vaeter", "v": false}, {"t": "ZMF 2", "src": "../bilder/werke/werk-21.jpg", "th": "../bilder/werke/werk-21-klein.jpg", "id": "werk-zmf-2", "v": false}, {"t": "ZMF 1", "src": "../bilder/werke/werk-19.jpg", "th": "../bilder/werke/werk-19-klein.jpg", "id": "werk-zmf-1", "v": false}, {"t": "Sonntagsausfahrt", "src": "../bilder/werke/werk-23.jpg", "th": "../bilder/werke/werk-23-klein.jpg", "id": "werk-sonntagsausfahrt", "v": false}, {"t": "Casa di pietra", "src": "../bilder/werke/werk-13.jpg", "th": "../bilder/werke/werk-13-klein.jpg", "id": "werk-casa-di-pietra", "v": false}, {"t": "Grechetto", "src": "../bilder/werke/werk-01.jpg", "th": "../bilder/werke/werk-01-klein.jpg", "id": "werk-grechetto", "v": false}, {"t": "Erwartungen", "src": "../bilder/werke/werk-12.jpg", "th": "../bilder/werke/werk-12-klein.jpg", "id": "werk-erwartungen", "v": false}, {"t": "Schröders", "src": "../bilder/werke/werk-06.jpg", "th": "../bilder/werke/werk-06-klein.jpg", "id": "werk-schroeders", "v": false}, {"t": "Untitled", "src": "../bilder/werke/werk-25.jpg", "th": "../bilder/werke/werk-25-klein.jpg", "id": "werk-untitled", "v": false}, {"t": "Stammtisch", "src": "../bilder/werke/werk-07.jpg", "th": "../bilder/werke/werk-07-klein.jpg", "id": "werk-stammtisch", "v": false}, {"t": "Gedanken an Sophia Loren", "src": "../bilder/werke/werk-11.jpg", "th": "../bilder/werke/werk-11-klein.jpg", "id": "werk-gedanken-an-sophia-loren", "v": false}, {"t": "Après-Ski", "src": "../bilder/werke/werk-31.jpg", "th": "../bilder/werke/werk-31-klein.jpg", "id": "werk-apres-ski", "v": true}, {"t": "D'Artagnan", "src": "../bilder/werke/werk-30.jpg", "th": "../bilder/werke/werk-30-klein.jpg", "id": "werk-d-artagnan", "v": true}, {"t": "Akt mit rotem Handtuch", "src": "../bilder/werke/werk-09.jpg", "th": "../bilder/werke/werk-09-klein.jpg", "id": "werk-akt-mit-rotem-handtuch", "v": false}, {"t": "Der zweifache Eros", "src": "../bilder/werke/werk-08.jpg", "th": "../bilder/werke/werk-08-klein.jpg", "id": "werk-der-zweifache-eros", "v": false}, {"t": "Nach dem Tanzen", "src": "../bilder/werke/werk-05.jpg", "th": "../bilder/werke/werk-05-klein.jpg", "id": "werk-nach-dem-tanzen", "v": false}, {"t": "Zigarettenpause", "src": "../bilder/werke/werk-03.jpg", "th": "../bilder/werke/werk-03-klein.jpg", "id": "werk-zigarettenpause", "v": false}, {"t": "Selicare", "src": "../bilder/werke/werk-17.jpg", "th": "../bilder/werke/werk-17-klein.jpg", "id": "werk-selicare", "v": false}, {"t": "Sommerabend", "src": "../bilder/werke/werk-20.jpg", "th": "../bilder/werke/werk-20-klein.jpg", "id": "werk-sommerabend", "v": false}, {"t": "Barfuß", "src": "../bilder/werke/werk-32.jpg", "th": "../bilder/werke/werk-32-klein.jpg", "id": "werk-barfuss", "v": true}, {"t": "Tommi", "src": "../bilder/werke/werk-33.jpg", "th": "../bilder/werke/werk-33-klein.jpg", "id": "werk-tommi", "v": true}, {"t": "1984", "src": "../bilder/werke/werk-34.jpg", "th": "../bilder/werke/werk-34-klein.jpg", "id": "werk-1984", "v": true}], prozess:[{"t": "Process 1", "src": "../bilder/atelier/prozess-1.jpg", "th": "../bilder/atelier/prozess-1.jpg"}, {"t": "Process 2", "src": "../bilder/atelier/prozess-2.jpg", "th": "../bilder/atelier/prozess-2.jpg"}, {"t": "Process 3", "src": "../bilder/atelier/prozess-3.jpg", "th": "../bilder/atelier/prozess-3.jpg"}, {"t": "Process 4", "src": "../bilder/atelier/prozess-4.jpg", "th": "../bilder/atelier/prozess-4.jpg"}, {"t": "Process 5", "src": "../bilder/atelier/prozess-5.jpg", "th": "../bilder/atelier/prozess-5.jpg"}, {"t": "Process 6", "src": "../bilder/atelier/prozess-6.jpg", "th": "../bilder/atelier/prozess-6.jpg"}, {"t": "Process 7", "src": "../bilder/atelier/prozess-7.jpg", "th": "../bilder/atelier/prozess-7.jpg"}, {"t": "Process 8", "src": "../bilder/atelier/prozess-8.jpg", "th": "../bilder/atelier/prozess-8.jpg"}, {"t": "Process 9", "src": "../bilder/atelier/prozess-9.jpg", "th": "../bilder/atelier/prozess-9.jpg"}]};
   const ruhig=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function mailHref(w){return 'mailto:art@lukasbaermann.de?subject='+encodeURIComponent('Enquiry: '+w.t)+'&body='+encodeURIComponent('Hello Lukas,\n\nI am interested in your work “'+w.t+'” (oil pastel on drawing paper, A3).\n\n');}
   function laden(src){return new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=src;});}
 
   // Großansicht (für Werke mit Titel, für Fotos ohne)
@@ -295,7 +300,7 @@
     const an=document.getElementById('anfrage'); an.hidden=!werk;
     an.textContent=(werk&&w.v)?an.dataset.verkauft:an.dataset.anfragen; an.classList.toggle('verkauft',!!(werk&&w.v));
     if(werk&&w.v) an.removeAttribute('href');
-    if(werk&&!w.v) an.href='mailto:art@lukasbaermann.de?subject='+encodeURIComponent('Enquiry: '+w.t)+'&body='+encodeURIComponent('Hello Lukas,\n\nI am interested in your work “'+w.t+'” (oil pastel on drawing paper, A3).\n\n');
+    if(werk&&!w.v) an.href=mailHref(w);
     gross.classList.add('offen');if(werk&&w.id)history.replaceState(null,'','#'+w.id);}
   function schliessen(){gross.classList.remove('offen');history.replaceState(null,'',location.pathname);}
   document.getElementById('zu').onclick=schliessen;
@@ -320,7 +325,7 @@
     const datei=w=>(werk&&innerWidth*devicePixelRatio/proSeite>560)?w.src:w.th;
     function bauen(){
       reihe.style.setProperty('--n',proSeite);
-      reihe.innerHTML=Array.from({length:proSeite},()=>`<figure class="slot ${art}"><button class="bildknopf"><img alt=""></button>${werk?'<figcaption></figcaption>':''}</figure>`).join('');
+      reihe.innerHTML=Array.from({length:proSeite},()=>`<figure class="slot ${art}"><button class="bildknopf"><img alt=""></button>${werk?'<figcaption><span class="werktitel"></span><span class="technik">Oil pastel on drawing paper, A3</span><span class="status-platz"></span></figcaption>':''}</figure>`).join('');
       reihe.querySelectorAll('.bildknopf').forEach((b,k)=>b.onclick=()=>oeffnen(liste,idx(seite,k),werk));
       punkte.innerHTML=Array.from({length:seiten()},(_,i)=>`<button aria-label="group ${i+1}"></button>`).join('');
       punkte.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{zeige(i);neustart();});
@@ -332,7 +337,10 @@
       if(!sofort&&!ruhig){reihe.classList.add('weg');await new Promise(r=>setTimeout(r,700));}
       await fertig;
       reihe.querySelectorAll('.slot').forEach((f,k)=>{const w=ws[k],img=f.querySelector('img');
-        img.src=datei(w);img.alt=w.t;const c=f.querySelector('figcaption');if(c)c.textContent=w.t;
+        img.src=datei(w);img.alt=w.t;const c=f.querySelector('figcaption');if(c){c.querySelector('.werktitel').textContent=w.t;
+          const lab=document.getElementById('anfrage').dataset, pl=c.querySelector('.status-platz');
+          pl.innerHTML=w.v?'<span class="status verkauft"></span>':'<a class="status"></a>';
+          const s=pl.firstChild; s.textContent=w.v?lab.verkauft:lab.anfragen; if(!w.v)s.href=mailHref(w);}
         f.querySelector('.bildknopf').setAttribute('aria-label',w.t+' – view large');});
       reihe.classList.remove('weg');
       punkte.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('aktiv',i===seite));
