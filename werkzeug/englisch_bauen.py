@@ -80,6 +80,13 @@ ersetze('alt="Lukas Bärmann im Türrahmen"', 'alt="Lukas Bärmann in a doorway"
 ersetze('alt="Lukas Bärmann läuft durch die Ausstellung"', 'alt="Lukas Bärmann walking through the exhibition"')
 ersetze('Arbeitsprozess ', 'Process ')
 
+# --- Suchmaschinen ---
+ersetze('<title>Lukas Bärmann – Künstler in Freiburg · Zeichnungen in Ölpastell</title>', '<title>Lukas Bärmann – Artist in Freiburg · Oil Pastel Drawings</title>')
+ersetze('<meta property="og:title" content="Lukas Bärmann – Künstler in Freiburg">', '<meta property="og:title" content="Lukas Bärmann – Artist in Freiburg">')
+ersetze('"jobTitle":"Bildender Künstler","description":"Freischaffender Künstler in Freiburg im Breisgau, figurative Zeichnungen in Ölpastell."',
+        '"jobTitle":"Visual artist","description":"Independent artist based in Freiburg, Germany, making figurative drawings in oil pastel."')
+ersetze('"url":"https://lukasbaermann.de/",', '"url":"https://lukasbaermann.de/en/",')
+
 os.makedirs(f"{W}/en", exist_ok=True)
 open(f"{W}/en/index.html", "w", encoding="utf-8").write(t)
 print("ok")
