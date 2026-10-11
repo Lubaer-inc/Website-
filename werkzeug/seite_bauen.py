@@ -8,7 +8,7 @@ GRUPPEN = [
     [(21, "ZMF 2"), (19, "ZMF 1"), (23, "Sonntagsausfahrt")],
     [(13, "Casa di pietra"), (1, "Grechetto"), (12, "Erwartungen")],
     [(6, "Schröders"), (25, "Untitled"), (7, "Stammtisch")],
-    [(11, "Gedanken an Sophia Loren"), (31, "Après-Ski"), (30, "D'Artagnan")],
+    [(31, "Après-Ski"), (11, "Gedanken an Sophia Loren"), (30, "D'Artagnan")],
     [(9, "Akt mit rotem Handtuch"), (8, "Der zweifache Eros"), (5, "Nach dem Tanzen")],
     [(3, "Zigarettenpause"), (17, "Selicare"), (20, "Sommerabend")],
     [(32, "Barfuß"), (33, "Tommi"), (34, "1984")],
