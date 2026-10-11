@@ -96,6 +96,13 @@
   .fortschritt{display:none;position:relative;width:120px;height:1px;background:var(--line);margin:34px auto 0}
   .fortschritt span{position:absolute;top:-.5px;left:0;height:2px;background:var(--ink);transition:left .45s ease,width .45s ease}
   @media (max-width:760px){ .punkte{display:none} .fortschritt{display:block} }
+  /* Handy: Werke liegen nebeneinander und gleiten beim Wischen durch; die Linie ist ein Schieberegler */
+  .reihe.band{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;transition:none}
+  .reihe.band::-webkit-scrollbar{display:none}
+  .reihe.band .slot{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always}
+  .fortschritt{touch-action:none;cursor:pointer}
+  .fortschritt::before{content:"";position:absolute;left:-12px;right:-12px;top:-16px;bottom:-16px}
+  .fortschritt.zieht span{height:3px;top:-1px;transition:none}
 
   /* Arbeitsweise */
   .text{font-size:clamp(1.1rem,1.5vw,1.35rem);font-weight:300;line-height:1.6;margin-bottom:60px}
@@ -328,36 +335,71 @@
       const i=basis.findIndex(w=>w.t==='at Bächle');
       return i<0?basis:[basis[i],...basis.filter((_,k)=>k!==i)]; };
     let liste=basis;
-    const reihe=el.querySelector('.reihe'), punkte=el.querySelector('.punkte'), buehne=el.querySelector('.buehne'), linie=el.querySelector('.fortschritt span');
+    const reihe=el.querySelector('.reihe'), punkte=el.querySelector('.punkte'), buehne=el.querySelector('.buehne'),
+          regler=el.querySelector('.fortschritt'), linie=el.querySelector('.fortschritt span');
     let proSeite=0, seite=0, timer=null, pause=false;
+    const band=()=>proSeite===1;          // Handy: Band zum Durchblättern
     const seiten=()=>Math.ceil(liste.length/proSeite);
     const idx=(s,k)=>(s*proSeite+k)%liste.length;
     const datei=w=>(werk&&innerWidth*devicePixelRatio/proSeite>560)?w.src:w.th;
+    const REG=120; let stueck=14;
+    function beschriften(f,w){
+      const img=f.querySelector('img'); img.alt=w.t;
+      const c=f.querySelector('figcaption'); if(c){c.querySelector('.werktitel').textContent=w.t;
+        const lab=document.getElementById('anfrage').dataset, pl=c.querySelector('.status-platz');
+        pl.innerHTML=w.v?'<span class="status verkauft"></span>':'<a class="status"></a>';
+        const s=pl.firstChild; s.textContent=w.v?lab.verkauft:lab.anfragen; if(!w.v)s.href=mailHref(w);}
+      f.querySelector('.bildknopf').setAttribute('aria-label',w.t+' – view large');
+    }
+    const slotHtml=()=>`<figure class="slot ${art}"><button class="bildknopf"><img alt=""></button>${werk?'<figcaption><span class="werktitel"></span><span class="technik">Oil pastel on drawing paper, A3</span><span class="status-platz"></span></figcaption>':''}</figure>`;
     function bauen(){
       reihe.style.setProperty('--n',proSeite);
-      reihe.innerHTML=Array.from({length:proSeite},()=>`<figure class="slot ${art}"><button class="bildknopf"><img alt=""></button>${werk?'<figcaption><span class="werktitel"></span><span class="technik">Oil pastel on drawing paper, A3</span><span class="status-platz"></span></figcaption>':''}</figure>`).join('');
-      reihe.querySelectorAll('.bildknopf').forEach((b,k)=>b.onclick=()=>oeffnen(liste,idx(seite,k),werk));
+      reihe.classList.toggle('band',band());
+      const anzahl=band()?liste.length:proSeite;
+      reihe.innerHTML=Array.from({length:anzahl},slotHtml).join('');
+      reihe.querySelectorAll('.bildknopf').forEach((b,k)=>b.onclick=()=>oeffnen(liste,band()?k:idx(seite,k),werk));
+      if(band()){
+        reihe.querySelectorAll('.slot').forEach((f,k)=>{const w=liste[k],img=f.querySelector('img');
+          if(k>1)img.loading='lazy'; img.sizes='100vw'; img.srcset=w.th+' 532w, '+w.src+' 1216w'; img.src=w.th; beschriften(f,w);});
+      }
+      stueck=Math.max(REG/seiten(),14); linie.style.width=stueck+'px';
       punkte.innerHTML=Array.from({length:seiten()},(_,i)=>`<button aria-label="group ${i+1}"></button>`).join('');
       punkte.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{zeige(i);neustart();});
     }
+    function linieSetzen(anteil){ linie.style.left=(Math.min(1,Math.max(0,anteil))*(REG-stueck))+'px'; }
     async function zeige(s,sofort=false){
       seite=(s+seiten())%seiten();
+      if(band()){
+        reihe.scrollTo({left:seite*reihe.clientWidth,behavior:(sofort||ruhig)?'auto':'smooth'});
+        if(sofort) linieSetzen(seiten()>1?seite/(seiten()-1):0);
+        return;
+      }
       const ws=Array.from({length:proSeite},(_,k)=>liste[idx(seite,k)]);
       const fertig=Promise.all(ws.map(w=>laden(datei(w))));
       if(!sofort&&!ruhig){reihe.classList.add('weg');await new Promise(r=>setTimeout(r,700));}
       await fertig;
-      reihe.querySelectorAll('.slot').forEach((f,k)=>{const w=ws[k],img=f.querySelector('img');
-        img.src=datei(w);img.alt=w.t;const c=f.querySelector('figcaption');if(c){c.querySelector('.werktitel').textContent=w.t;
-          const lab=document.getElementById('anfrage').dataset, pl=c.querySelector('.status-platz');
-          pl.innerHTML=w.v?'<span class="status verkauft"></span>':'<a class="status"></a>';
-          const s=pl.firstChild; s.textContent=w.v?lab.verkauft:lab.anfragen; if(!w.v)s.href=mailHref(w);}
-        f.querySelector('.bildknopf').setAttribute('aria-label',w.t+' – view large');});
+      reihe.querySelectorAll('.slot').forEach((f,k)=>{const w=ws[k]; f.querySelector('img').src=datei(w); beschriften(f,w);});
       reihe.classList.remove('weg');
       punkte.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('aktiv',i===seite));
-      { const n=seiten(), breit=120, stueck=Math.max(breit/n,14);
-        linie.style.width=stueck+'px'; linie.style.left=(n>1?seite/(n-1)*(breit-stueck):0)+'px'; }
+      linieSetzen(seiten()>1?seite/(seiten()-1):0);
       for(let k=0;k<proSeite;k++) laden(datei(liste[idx(seite+1,k)]));
     }
+    // Band: Linie folgt dem Wischen fließend
+    reihe.addEventListener('scroll',()=>{ if(!band())return;
+      const max=reihe.scrollWidth-reihe.clientWidth; linieSetzen(max>0?reihe.scrollLeft/max:0);
+      seite=Math.round(reihe.scrollLeft/Math.max(1,reihe.clientWidth)); },{passive:true});
+    // Linie als Schieberegler
+    let zieht=false;
+    function ziehen(e){ const r=regler.getBoundingClientRect();
+      const anteil=Math.min(1,Math.max(0,(e.clientX-r.left-stueck/2)/(REG-stueck)));
+      if(band()) reihe.scrollLeft=anteil*(reihe.scrollWidth-reihe.clientWidth);
+      else { linieSetzen(anteil); } return anteil; }
+    regler.addEventListener('pointerdown',e=>{ zieht=true; pause=true; regler.classList.add('zieht'); regler.setPointerCapture(e.pointerId);
+      reihe.style.scrollSnapType='none'; ziehen(e); });
+    regler.addEventListener('pointermove',e=>{ if(zieht) ziehen(e); });
+    const loslassen=e=>{ if(!zieht)return; zieht=false; regler.classList.remove('zieht'); reihe.style.scrollSnapType='';
+      const anteil=ziehen(e); const ziel=Math.round(anteil*(seiten()-1)); pause=false; zeige(ziel); neustart(); };
+    regler.addEventListener('pointerup',loslassen); regler.addEventListener('pointercancel',loslassen);
     function neustart(){clearInterval(timer); if(!ruhig) timer=setInterval(()=>{
       const r=el.getBoundingClientRect(), sichtbar=r.bottom>0&&r.top<innerHeight;
       if(!pause&&sichtbar&&!document.hidden&&!offen())zeige(seite+1);},6000);}
@@ -365,12 +407,13 @@
     el.querySelector('.pfeil.rechts').onclick=()=>{zeige(seite+1);neustart();};
     buehne.addEventListener('mouseenter',()=>pause=true); buehne.addEventListener('mouseleave',()=>pause=false);
     let x0=null;
-    buehne.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
-    buehne.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;
+    buehne.addEventListener('touchstart',e=>{x0=e.touches[0].clientX; if(band())pause=true;},{passive:true});
+    buehne.addEventListener('touchend',e=>{ if(band()){pause=false;neustart();x0=null;return;}
+      if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;
       if(Math.abs(dx)>40){zeige(seite+(dx<0?1:-1));neustart();} x0=null;});
-    function anpassen(){const n=innerWidth<760?1:3; if(n!==proSeite){const w0=proSeite?liste[idx(seite,0)]:null;
+    function anpassen(){const n=innerWidth<760?1:3; if(n!==proSeite){const w0=proSeite?liste[band()?seite:idx(seite,0)]:null;
       proSeite=n; liste=ordnung(n); const erstes=w0?Math.max(0,liste.indexOf(w0)):0;
-      seite=Math.floor(erstes/proSeite); bauen(); zeige(seite,true);}}
+      seite=Math.floor(erstes/proSeite); bauen(); requestAnimationFrame(()=>zeige(seite,true));}}
     addEventListener('resize',anpassen); anpassen(); neustart();
     alleKarusselle.push({el,weiter:d=>{zeige(seite+d);neustart();}});
   }
