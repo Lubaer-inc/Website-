@@ -49,7 +49,7 @@
   .slot.werk img{aspect-ratio:1216/1600}
   .slot.foto img{aspect-ratio:1/1}
   .slot figcaption{font-size:.95rem;font-weight:300;text-align:center;padding:14px 16px 0}
-  .slot figcaption::after{content:"Ölpastelle auf Malpapier, A3";display:block;font-weight:300;color:var(--muted)}
+  .slot figcaption::after{content:"Ölpastell auf Malpapier, A3";display:block;font-weight:300;color:var(--muted)}
   .pfeil{position:absolute;top:0;bottom:0;width:12%;min-width:60px;display:flex;align-items:center;justify-content:center;z-index:3;opacity:0;transition:opacity .3s}
   .pfeil svg{width:44px;height:44px;stroke:#141414;stroke-width:1.2;fill:none;opacity:.45;transition:opacity .2s}
   .pfeil.links{left:0} .pfeil.rechts{right:0}
@@ -249,7 +249,7 @@
         gt=document.getElementById('grosstitel'), gtech=document.getElementById('grosstechnik');
   let gListe=[], gi=0, gWerk=false; const offen=()=>gross.classList.contains('offen');
   function oeffnen(liste,i,werk){gListe=liste;gWerk=werk;gi=(i+liste.length)%liste.length;const w=liste[gi];
-    gb.src=w.src;gb.alt=w.t;gt.textContent=werk?w.t:'';gtech.textContent=werk?'– Ölpastelle auf Malpapier, A3':'';
+    gb.src=w.src;gb.alt=w.t;gt.textContent=werk?w.t:'';gtech.textContent=werk?'– Ölpastell auf Malpapier, A3':'';
     gross.classList.add('offen');if(werk&&w.id)history.replaceState(null,'','#'+w.id);}
   function schliessen(){gross.classList.remove('offen');history.replaceState(null,'',location.pathname);}
   document.getElementById('zu').onclick=schliessen;
