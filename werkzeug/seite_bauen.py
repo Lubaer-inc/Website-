@@ -8,13 +8,13 @@ GRUPPEN = [
     [(21, "ZMF 2"), (19, "ZMF 1"), (23, "Sonntagsausfahrt")],
     [(13, "Casa di pietra"), (1, "Grechetto"), (12, "Erwartungen")],
     [(6, "Schröders"), (25, "Untitled"), (7, "Stammtisch")],
-    [(11, "Gedanken an Sophia Loren"), (10, "Kraniche"), (30, "D'Artagnan")],
+    [(11, "Gedanken an Sophia Loren"), (31, "Après-Ski"), (30, "D'Artagnan")],
     [(9, "Akt mit rotem Handtuch"), (8, "Der zweifache Eros"), (5, "Nach dem Tanzen")],
     [(3, "Zigarettenpause"), (17, "Selicare"), (20, "Sommerabend")],
 ]
 TECHNIK = "Ölpastell auf Malpapier, A3"
 # Verkaufte Werke: in der Großansicht steht "verkauft" statt "anfragen"
-VERKAUFT = {"D'Artagnan"}
+VERKAUFT = {"D'Artagnan", "Après-Ski"}
 
 def slug(s):
     for a, b in (("ä","ae"),("ö","oe"),("ü","ue"),("ß","ss"),("Ä","Ae"),("Ö","Oe"),("Ü","Ue")):

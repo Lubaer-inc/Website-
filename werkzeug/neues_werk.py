@@ -139,13 +139,19 @@ def struktur_angleichen(rgb):
     rgb = rgb.astype(np.float32)
     g = rgb.mean(2)
     m = papier_maske(rgb)
-    weich = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 4)
+    # nur deutlich abseits der Striche verändern, sonst entstehen helle Säume an den Konturen
+    sicher = cv2.erode(m.astype(np.uint8), np.ones((25, 25), np.uint8)).astype(np.float32)
+    weich = cv2.GaussianBlur(sicher, (0, 0), 5)
     b2, b12 = cv2.GaussianBlur(g, (0, 0), 2), cv2.GaussianBlur(g, (0, 0), 12)
     fein, mittel = g - b2, b2 - b12
     zusatz = np.zeros_like(g)
-    for band, ziel in ((fein, STRUKTUR_ZIEL["fein"]), (mittel, STRUKTUR_ZIEL["mittel"])):
+    # feine Körnung ÖRTLICH angleichen (dunkle Fotoecken werden durch den Lichtausgleich sonst körniger)
+    lokal = np.sqrt(cv2.GaussianBlur(np.where(m, fein, 0) ** 2, (0, 0), 30) /
+                    np.maximum(cv2.GaussianBlur(m.astype(np.float32), (0, 0), 30), 1e-3))
+    zusatz += fein * (np.clip(STRUKTUR_ZIEL["fein"] * 0.69 / np.maximum(lokal, 1e-3), 0.4, 3.5) - 1)
+    for band, ziel in ((mittel, STRUKTUR_ZIEL["mittel"]),):
         ist = band[m].std()
-        faktor = np.clip(ziel / max(ist, 1e-3), 1.0, 3.5)
+        faktor = np.clip(ziel / max(ist, 1e-3), 0.4, 3.5)  # auch abschwächen, wenn das Foto körniger ist
         zusatz += band * (faktor - 1)
     # sehr leichte großflächige Wolkigkeit wie bei echten Fotos von Papier
     rng = np.random.default_rng(7)
