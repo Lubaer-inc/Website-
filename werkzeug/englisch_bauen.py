@@ -58,6 +58,7 @@ ersetze('>schließen</button>', '>close</button>')
 ersetze('aria-label="bild groß"', 'aria-label="large view"')
 ersetze('aria-label="vorheriges bild"', 'aria-label="previous image"')
 ersetze('aria-label="nächstes bild"', 'aria-label="next image"')
+ersetze('data-anfragen="anfragen" data-verkauft="verkauft"', 'data-anfragen="enquire" data-verkauft="sold"')
 ersetze('>anfragen</a>', '>enquire</a>')
 ersetze("encodeURIComponent('Anfrage: '+w.t)", "encodeURIComponent('Enquiry: '+w.t)")
 ersetze("encodeURIComponent('Hallo Lukas,\\n\\nich interessiere mich für dein Werk „'+w.t+'“ (Oil pastel on drawing paper, A3).\\n\\n')",

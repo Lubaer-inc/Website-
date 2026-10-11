@@ -8,11 +8,13 @@ GRUPPEN = [
     [(21, "ZMF 2"), (19, "ZMF 1"), (23, "Sonntagsausfahrt")],
     [(13, "Casa di pietra"), (1, "Grechetto"), (12, "Erwartungen")],
     [(6, "Schröders"), (25, "Untitled"), (7, "Stammtisch")],
-    [(11, "Gedanken an Sophia Loren"), (10, "Kraniche"), (14, "Despedida")],
+    [(11, "Gedanken an Sophia Loren"), (10, "Kraniche"), (30, "D'Artagnan")],
     [(9, "Akt mit rotem Handtuch"), (8, "Der zweifache Eros"), (5, "Nach dem Tanzen")],
     [(3, "Zigarettenpause"), (17, "Selicare"), (20, "Sommerabend")],
 ]
 TECHNIK = "Ölpastell auf Malpapier, A3"
+# Verkaufte Werke: in der Großansicht steht "verkauft" statt "anfragen"
+VERKAUFT = {"D'Artagnan"}
 
 def slug(s):
     for a, b in (("ä","ae"),("ö","oe"),("ü","ue"),("ß","ss"),("Ä","Ae"),("Ö","Oe"),("Ü","Ue")):
@@ -21,7 +23,7 @@ def slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 WERKE = [{"t": t, "src": f"bilder/werke/werk-{i:02d}.jpg", "th": f"bilder/werke/werk-{i:02d}-klein.jpg",
-          "id": "werk-" + slug(t)} for g in GRUPPEN for i, t in g]
+          "id": "werk-" + slug(t), "v": t in VERKAUFT} for g in GRUPPEN for i, t in g]
 # Arbeitsfotos: drei Reihen wie im Portfolio (prozess-1 … prozess-9)
 PROZESS = [{"t": f"Arbeitsprozess {i}", "src": f"bilder/atelier/prozess-{i}.jpg", "th": f"bilder/atelier/prozess-{i}.jpg"}
            for i in range(1, 10)]
@@ -172,6 +174,7 @@ page = f'''<!doctype html>
   .gross-ansicht .anfrage{{display:inline-block;margin-top:10px;font-size:.95rem;color:var(--muted);border-bottom:1px solid var(--line);transition:color .2s,border-color .2s}}
   .gross-ansicht .anfrage:hover{{color:var(--ink);border-color:var(--ink)}}
   .gross-ansicht .anfrage[hidden]{{display:none}}
+  .gross-ansicht .anfrage.verkauft{{border:0;color:var(--muted);cursor:default}}
   .gross-ansicht .zu{{position:absolute;top:22px;right:28px;font-size:1rem;color:var(--muted)}}
   .gross-ansicht .zu:hover{{color:var(--ink)}}
   .gross-ansicht .pf{{position:absolute;top:50%;transform:translateY(-50%);font-size:2rem;font-weight:300;color:var(--muted);padding:20px}}
@@ -298,7 +301,7 @@ page = f'''<!doctype html>
   <button class="pf l" id="gl" aria-label="vorheriges bild">‹</button>
   <img id="grossbild" alt="">
   <p class="zeile"><b id="grosstitel"></b> <span id="grosstechnik"></span></p>
-  <a class="anfrage" id="anfrage" href="mailto:art@lukasbaermann.de">anfragen</a>
+  <a class="anfrage" id="anfrage" href="mailto:art@lukasbaermann.de" data-anfragen="anfragen" data-verkauft="verkauft">anfragen</a>
   <button class="pf r" id="gr" aria-label="nächstes bild">›</button>
 </div>
 
@@ -314,7 +317,9 @@ page = f'''<!doctype html>
   function oeffnen(liste,i,werk){{gListe=liste;gWerk=werk;gi=(i+liste.length)%liste.length;const w=liste[gi];
     gb.src=w.src;gb.alt=w.t;gt.textContent=werk?w.t:'';gtech.textContent=werk?'– {TECHNIK}':'';
     const an=document.getElementById('anfrage'); an.hidden=!werk;
-    if(werk) an.href='mailto:art@lukasbaermann.de?subject='+encodeURIComponent('Anfrage: '+w.t)+'&body='+encodeURIComponent('Hallo Lukas,\\n\\nich interessiere mich für dein Werk „'+w.t+'“ ({TECHNIK}).\\n\\n');
+    an.textContent=(werk&&w.v)?an.dataset.verkauft:an.dataset.anfragen; an.classList.toggle('verkauft',!!(werk&&w.v));
+    if(werk&&w.v) an.removeAttribute('href');
+    if(werk&&!w.v) an.href='mailto:art@lukasbaermann.de?subject='+encodeURIComponent('Anfrage: '+w.t)+'&body='+encodeURIComponent('Hallo Lukas,\\n\\nich interessiere mich für dein Werk „'+w.t+'“ ({TECHNIK}).\\n\\n');
     gross.classList.add('offen');if(werk&&w.id)history.replaceState(null,'','#'+w.id);}}
   function schliessen(){{gross.classList.remove('offen');history.replaceState(null,'',location.pathname);}}
   document.getElementById('zu').onclick=schliessen;

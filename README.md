@@ -25,6 +25,17 @@ python3 werkzeug/englisch_bauen.py .   # en/index.html aus der deutschen Seite
 Neue deutsche Texte brauchen in `werkzeug/englisch_bauen.py` eine passende Übersetzungszeile,
 sonst bricht das Skript mit „nicht gefunden“ ab.
 
+## Neues Werk hinzufügen
+
+```sh
+python3 werkzeug/neues_werk.py FOTO.jpg NUMMER              # Foto mit Hintergrund (Blatt wird erkannt und entzerrt)
+python3 werkzeug/neues_werk.py FOTO.jpg NUMMER --zugeschnitten   # Foto zeigt nur das Blatt
+python3 werkzeug/neues_werk.py FOTO.jpg NUMMER --test ORDNER     # nur Testbild, nichts in die Website
+```
+Setzt das Blatt ins Passepartout (Vorlage: `werkzeug/montagen/vorlage_Passepartout.png`), gleicht Ausleuchtung,
+Papierton und -struktur an und legt `bilder/werke/werk-NN.jpg` an. Danach Titel in `GRUPPEN` (und ggf. `VERKAUFT`)
+in `werkzeug/seite_bauen.py` eintragen und die Seite neu erzeugen.
+
 ## Veröffentlichen (GitHub Pages)
 
 1. **Settings → Pages**: Source „Deploy from a branch“, Branch `main`, Ordner `/ (root)`.
