@@ -315,7 +315,10 @@
   function karussell(el){
     const basis=QUELLEN[el.dataset.quelle], art=el.dataset.art, werk=art==='werk';
     // Handy: in der Werke-Galerie zuerst "at Bächle", dann die übrigen in gewohnter Reihenfolge
-    const ordnung=n=>{ if(!werk||n!==1) return basis; const i=basis.findIndex(w=>w.t==='at Bächle');
+    // Handy: bei den Arbeitsfotos zuerst die Gruppenskizze, dann das ausgemalte Gruppenbild, dann Zeichnen im Garten
+    const ordnung=n=>{ if(n!==1) return basis;
+      if(!werk){ const vorne=[1,2,0]; return [...vorne.map(k=>basis[k]),...basis.filter((_,k)=>!vorne.includes(k))]; }
+      const i=basis.findIndex(w=>w.t==='at Bächle');
       return i<0?basis:[basis[i],...basis.filter((_,k)=>k!==i)]; };
     let liste=basis;
     const reihe=el.querySelector('.reihe'), punkte=el.querySelector('.punkte'), buehne=el.querySelector('.buehne');
