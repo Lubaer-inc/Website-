@@ -19,7 +19,11 @@ Website von Lukas Bärmann, freischaffender Künstler in Freiburg. Reines HTML/C
 ```sh
 python3 werkzeug/seite_bauen.py .
 python3 werkzeug/rechtliches_bauen.py .
+python3 werkzeug/englisch_bauen.py .   # en/index.html aus der deutschen Seite
 ```
+
+Neue deutsche Texte brauchen in `werkzeug/englisch_bauen.py` eine passende Übersetzungszeile,
+sonst bricht das Skript mit „nicht gefunden“ ab.
 
 ## Veröffentlichen (GitHub Pages)
 

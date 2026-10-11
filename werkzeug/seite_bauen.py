@@ -53,6 +53,9 @@ page = f'''<!doctype html>
 <title>lukas bärmann – artist</title>
 <meta name="description" content="Lukas Bärmann – freischaffender Künstler in Freiburg im Breisgau. Figurative Zeichnungen in Ölpastellkreide.">
 <link rel="canonical" href="https://lukasbaermann.de/">
+<link rel="alternate" hreflang="de" href="https://lukasbaermann.de/">
+<link rel="alternate" hreflang="en" href="https://lukasbaermann.de/en/">
+<link rel="alternate" hreflang="x-default" href="https://lukasbaermann.de/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:url" content="https://lukasbaermann.de/">
@@ -86,6 +89,7 @@ page = f'''<!doctype html>
   nav{{display:flex;gap:28px;font-size:1rem}}
   nav a{{color:var(--muted);transition:color .2s}}
   nav a:hover,nav a.aktiv{{color:var(--ink)}}
+  nav .sprache{{padding-left:22px;border-left:1px solid var(--line)}}
   .burger{{display:none;width:44px;height:44px;margin-right:-10px;position:relative}}
   .burger span{{position:absolute;left:10px;right:10px;height:1.5px;background:var(--ink);transition:transform .3s,opacity .3s}}
   .burger span:nth-child(1){{top:15px}} .burger span:nth-child(2){{top:21px}} .burger span:nth-child(3){{top:27px}}
@@ -174,6 +178,7 @@ page = f'''<!doctype html>
     .menue-offen nav{{display:flex}}
     nav a{{font-size:1.6rem;font-weight:300;letter-spacing:-.02em;padding:6px 0;color:var(--ink)}}
     nav a.aktiv{{color:var(--muted)}}
+    nav .sprache{{border:0;padding-left:0;margin-top:10px;font-size:1.1rem;color:var(--muted)}}
     section{{padding-top:80px}}
     .liste li{{grid-template-columns:1fr;gap:2px}}
     .zeile-foto,.zeile-foto.gespiegelt{{grid-template-columns:1fr}}
@@ -194,6 +199,7 @@ page = f'''<!doctype html>
     <a href="#ausstellungen">ausstellungen</a>
     <a href="#presse">presse</a>
     <a href="#kontakt">kontakt</a>
+    <a href="en/" class="sprache" lang="en" hreflang="en">en</a>
   </nav>
 </header>
 
