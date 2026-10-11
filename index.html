@@ -53,22 +53,21 @@
   .thumb:hover,.thumb.aktiv{opacity:1}
   .thumb img{width:54px;height:71px;object-fit:cover}
 
-  .arbeit{display:grid;grid-template-columns:1fr 1.3fr;gap:50px;align-items:start}
-  .arbeit p{max-width:520px}
-  .prozess{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  .prozess img{width:100%;aspect-ratio:3/4;object-fit:cover}
+  .arbeit p{max-width:720px;margin-bottom:40px}
+  .prozess{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:900px}
+  .prozess img{width:100%;aspect-ratio:1/1;object-fit:cover}
+  /* Fotos wie auf der Portfolio-Titelseite */
+  #fotos{padding:20px 0 90px;border-top:0}
+  .fotos{display:grid;grid-template-columns:344fr 154fr;grid-template-rows:231fr 263fr;gap:18px;aspect-ratio:516/515;max-width:1000px}
+  .fotos img{width:100%;height:100%;object-fit:cover}
+  .fotos .gross{grid-row:1 / span 2}
 
-  .about{display:grid;grid-template-columns:1fr 1.4fr;gap:50px;align-items:start}
-  .about img{width:100%;aspect-ratio:4/5;object-fit:cover}
-  .about p+p{margin-top:16px}
 
   .liste{list-style:none}
   .liste li{display:grid;grid-template-columns:90px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
   .liste .jahr{font-weight:300;font-size:1.2rem;color:var(--ink)}
   .liste strong{font-weight:600}
   .liste span{display:block;color:var(--muted);font-size:.92rem}
-  .ansichten{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:36px;max-width:760px}
-  .ansichten img{width:100%;aspect-ratio:4/5;object-fit:cover}
   .presse{list-style:none;margin-top:10px}
   .presse li{padding:14px 0;border-bottom:1px solid var(--line);font-size:.95rem}
   .presse em{font-style:normal;color:var(--muted)}
@@ -93,8 +92,8 @@
     .stage img{max-height:70vh}
     .caption{flex-direction:column;align-items:flex-start;gap:10px}
     section{padding:60px 0}
-    .arbeit,.about{grid-template-columns:1fr;gap:30px}
-    .prozess{grid-template-columns:repeat(2,1fr)}
+    .prozess{gap:6px}
+    .fotos{gap:8px}
     .liste li{grid-template-columns:64px 1fr;gap:14px}
     footer a{margin:0 18px 0 0}
   }
@@ -109,7 +108,6 @@
     <ul>
       <li><a href="#werke">Werke</a></li>
       <li><a href="#arbeitsweise">Arbeitsweise</a></li>
-      <li><a href="#ueber">Über mich</a></li>
       <li><a href="#ausstellungen">Ausstellungen</a></li>
       <li><a href="#kontakt">Kontakt</a></li>
     </ul>
@@ -159,13 +157,20 @@
     </div>
   </section>
 
+  <section id="fotos" aria-label="Fotos">
+    <div class="wrap">
+      <div class="fotos">
+        <img class="gross" src="bilder/titel/portrait.jpg" alt="Lukas Bärmann" loading="lazy">
+        <img src="bilder/titel/ausstellung-1.jpg" alt="Lukas Bärmann in der Ausstellung" loading="lazy">
+        <img src="bilder/titel/ausstellung-2.jpg" alt="Ausstellungsansicht mit Lukas Bärmann" loading="lazy">
+      </div>
+    </div>
+  </section>
+
   <section id="arbeitsweise">
     <div class="wrap arbeit">
-      <div>
-        <h2>Motive und Arbeitsweise</h2>
-        <p>Ausgangspunkt meiner Arbeiten sind häufig beiläufige Situationen und Körperhaltungen, die ich im Alltag beobachte oder fotografisch festhalte. In der Zeichnung löse ich die Figuren zunehmend aus ihrem ursprünglichen Umfeld. Dabei geht es mir weniger um eine genaue Wiedergabe als um die Haltung, die Beziehung der Personen zueinander und die Stimmung des beobachteten Moments.</p>
-        <p style="margin-top:16px">Aus dieser Reduktion entwickelt sich anschließend die malerische Arbeit. Meine Werke entstehen in unterschiedlichen Techniken. Neben Acryl- und Ölmalereien bilden Zeichnungen mit Ölpastellkreide auf Leinwand oder Malkarton einen besonderen Schwerpunkt.</p>
-      </div>
+      <h2>Motive und Arbeitsweise</h2>
+      <p>Ausgangspunkt meiner Arbeiten sind häufig beiläufige Situationen und Körperhaltungen, die ich im Alltag beobachte oder fotografisch festhalte. In der Zeichnung löse ich die Figuren zunehmend aus ihrem ursprünglichen Umfeld. Dabei geht es mir weniger um eine genaue Wiedergabe als um die Haltung, die Beziehung der Personen zueinander und die Stimmung des beobachteten Moments. Aus dieser Reduktion entwickelt sich anschließend die malerische Arbeit. Meine Werke entstehen in unterschiedlichen Techniken. Neben Acryl- und Ölmalereien bilden Zeichnungen mit Ölpastellkreide auf Leinwand oder Malkarton einen besonderen Schwerpunkt.</p>
       <div class="prozess">
         <img src="bilder/atelier/prozess-1.jpg" alt="Arbeitsprozess 1" loading="lazy">
         <img src="bilder/atelier/prozess-2.jpg" alt="Arbeitsprozess 2" loading="lazy">
@@ -175,17 +180,7 @@
         <img src="bilder/atelier/prozess-6.jpg" alt="Arbeitsprozess 6" loading="lazy">
         <img src="bilder/atelier/prozess-7.jpg" alt="Arbeitsprozess 7" loading="lazy">
         <img src="bilder/atelier/prozess-8.jpg" alt="Arbeitsprozess 8" loading="lazy">
-      </div>
-    </div>
-  </section>
-
-  <section id="ueber">
-    <div class="wrap about">
-      <img src="bilder/portrait.jpg" alt="Porträt Lukas Bärmann" loading="lazy">
-      <div>
-        <h2>Über mich</h2>
-        <p>Ich lebe und arbeite in Freiburg im Breisgau und bin seit 2023 als freischaffender Künstler tätig.</p>
-        <p>Im Mittelpunkt meiner Arbeit stehen figurative Zeichnungen in Ölpastellkreide; daneben entstehen Acryl- und Ölmalereien. Meine Arbeiten waren unter anderem in Freiburg und Kaiserslautern zu sehen, zuletzt gemeinsam mit dem Künstler Erold Sommer.</p>
+        <img src="bilder/atelier/prozess-9.jpg" alt="Arbeitsprozess 9" loading="lazy">
       </div>
     </div>
   </section>
@@ -198,10 +193,6 @@
         <li><div class="jahr">2026</div><div><strong>Platonic Symposium: Formen der Liebe</strong> – mit Erold Sommer<span>Galerie des Westpfalz-Klinikums, Kaiserslautern · Januar bis März 2026</span></div></li>
         <li><div class="jahr">2025</div><div><strong>Platonic Symposium</strong><span>Weingut und Brennerei Andreas Dilger, Freiburg</span></div></li>
       </ul>
-      <div class="ansichten">
-        <img src="bilder/ausstellung/ausstellung-1.jpg" alt="Ausstellungsansicht" loading="lazy">
-        <img src="bilder/ausstellung/ausstellung-2.jpg" alt="Lukas Bärmann in der Ausstellung" loading="lazy">
-      </div>
 
       <h3 class="unter">Presse</h3>
       <ul class="presse">
