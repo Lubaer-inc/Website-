@@ -315,9 +315,10 @@
   function karussell(el){
     const basis=QUELLEN[el.dataset.quelle], art=el.dataset.art, werk=art==='werk';
     // Handy: in der Werke-Galerie zuerst "at Bächle", dann die übrigen in gewohnter Reihenfolge
-    // Handy: bei den Arbeitsfotos zuerst die Gruppenskizze, dann das ausgemalte Gruppenbild, dann Zeichnen im Garten
+    // Handy, Arbeitsfotos: Gruppenskizze, ausgemaltes Gruppenbild, Zeichnen im Garten | mittlere Reihe wie gehabt |
+    // Zeichnen des sitzenden Mannes, Skizze, ausgemalter sitzender Mann
     const ordnung=n=>{ if(n!==1) return basis;
-      if(!werk){ const vorne=[1,2,0]; return [...vorne.map(k=>basis[k]),...basis.filter((_,k)=>!vorne.includes(k))]; }
+      if(!werk) return [1,2,0,3,4,5,8,6,7].map(k=>basis[k]);
       const i=basis.findIndex(w=>w.t==='at Bächle');
       return i<0?basis:[basis[i],...basis.filter((_,k)=>k!==i)]; };
     let liste=basis;
