@@ -15,7 +15,7 @@ GRUPPEN = [
 ]
 TECHNIK = "Ölpastell auf Malpapier, A3"
 # Verkaufte Werke: in der Großansicht steht "verkauft" statt "anfragen"
-VERKAUFT = {"D'Artagnan", "Après-Ski", "Barfuß", "Tommi", "1984"}
+VERKAUFT = {"D'Artagnan", "Après-Ski", "Barfuß", "Tommi", "1984", "Junge Väter"}
 
 def slug(s):
     for a, b in (("ä","ae"),("ö","oe"),("ü","ue"),("ß","ss"),("Ä","Ae"),("Ö","Oe"),("Ü","Ue")):
