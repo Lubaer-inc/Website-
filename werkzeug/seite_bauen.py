@@ -135,6 +135,10 @@ page = f'''<!doctype html>
   .slot .status{{display:inline-block;margin-top:6px;font-size:.78rem;color:var(--muted);letter-spacing:.01em;border-bottom:1px solid var(--line);transition:color .2s,border-color .2s}}
   .slot a.status:hover{{color:var(--ink);border-color:var(--ink)}}
   .slot .status.verkauft{{border-bottom-color:transparent}}
+  /* Verfügbarkeit: kleiner Punkt hinter "anfragen" (grün) bzw. "verkauft" (rot) */
+  .slot .status,.gross-ansicht .anfrage{{position:relative}}
+  .slot .status::after,.gross-ansicht .anfrage::after{{content:"";position:absolute;right:-12px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:#3f9b5f}}
+  .slot .status.verkauft::after,.gross-ansicht .anfrage.verkauft::after{{background:#c8453c}}
   .pfeil{{position:absolute;top:0;bottom:0;width:12%;min-width:60px;display:flex;align-items:center;justify-content:center;z-index:3;opacity:0;transition:opacity .3s}}
   .pfeil svg{{width:44px;height:44px;stroke:#141414;stroke-width:1.2;fill:none;opacity:.45;transition:opacity .2s}}
   .pfeil.links{{left:0}} .pfeil.rechts{{right:0}}
