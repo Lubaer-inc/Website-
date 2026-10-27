@@ -115,7 +115,10 @@ def auf_fenster_bringen(rgb):
     ziel = fw / fh
     if w / h > ziel:
         fehlt = int(round(w / ziel)) - h
-        rand = rgb[:min(h, max(fehlt, 1) + 60)]
+        # nur leeres Papier oberhalb der Zeichnung verwenden (sonst wird ein Stück der Figur gespiegelt)
+        dunkel = (rgb.mean(2) < np.median(rgb.mean(2)) - 35).any(axis=1)
+        frei = int(np.argmax(dunkel)) if dunkel.any() else h
+        rand = rgb[:max(40, min(h, max(fehlt, 1) + 60, frei - 30))]
         # gespiegelter oberer Rand, mehrfach falls nötig, mit weicher Naht
         stuecke = []
         while sum(s.shape[0] for s in stuecke) < fehlt:
