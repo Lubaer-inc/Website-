@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Bio-Check 9E</title>
+<style>
+:root{
+  --bg:#f4f1ea; --card:#ffffff; --ink:#1d2321; --muted:#66706c; --line:#e1ddd3;
+  --ok:#1f9d5c; --ok-bg:#e3f5ea; --bad:#d4483b; --bad-bg:#fbe6e3; --idk:#8a7d5c; --idk-bg:#f1ecdf;
+  --z:#2f9e6e; --k:#e0533d; --i:#6b5bd6; --o:#c98a12;
+  --shadow:0 2px 0 rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.06);
+  --r:18px;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#141816;--card:#1e2421;--ink:#eef1ef;--muted:#9ba6a1;--line:#2e3633;
+    --ok-bg:#163526;--bad-bg:#3a1d1a;--idk-bg:#2e2a20;--shadow:0 2px 0 rgba(0,0,0,.3)}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+#app{max-width:640px;margin:0 auto;padding:16px 16px 48px;min-height:100vh}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;min-height:40px}
+.brand{font-weight:800;letter-spacing:-.02em;font-size:1.05rem}
+.brand span{color:var(--z)}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:700;font-size:.92rem}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);border:1px solid var(--line);padding:22px}
+h1{font-size:clamp(1.8rem,7vw,2.5rem);line-height:1.1;letter-spacing:-.03em;margin-bottom:10px}
+h2{font-size:1.35rem;line-height:1.25;letter-spacing:-.01em;margin-bottom:14px}
+p{margin-bottom:12px}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.btn{display:block;width:100%;padding:15px 18px;border-radius:14px;font-weight:800;font-size:1.05rem;background:var(--ink);color:var(--bg);box-shadow:0 3px 0 rgba(0,0,0,.25);transition:transform .08s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.row{display:flex;gap:10px;margin-top:14px}
+.row .btn{flex:1}
+input[type=text]{width:100%;font:inherit;font-size:1.1rem;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);margin:6px 0 16px}
+input[type=text]:focus{outline:none;border-color:var(--z)}
+/* Karte der Stationen */
+.map{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.station{position:relative;text-align:left;border-radius:var(--r);padding:16px 14px 14px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 4px 0 rgba(0,0,0,.18);transition:transform .1s}
+.station:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
+.station .ico{font-size:2rem;line-height:1}
+.station .t{font-weight:800;font-size:1.05rem;line-height:1.2}
+.station .s{font-size:.85rem;opacity:.9}
+.station.done::after{content:"✓";position:absolute;top:10px;right:12px;background:rgba(255,255,255,.95);color:var(--ink);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:900}
+.stars{letter-spacing:2px}
+/* Fortschritt */
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;flex:1}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .4s ease}
+.qhead{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.x{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:1.2rem;color:var(--muted)}
+.tag{display:inline-block;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+/* Antworten */
+.opts{display:grid;gap:10px;margin:6px 0 4px}
+.opt{width:100%;text-align:left;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-weight:600;box-shadow:0 2px 0 var(--line);transition:transform .06s,border-color .15s}
+.opt:active{transform:translateY(2px)}
+.opt.sel{border-color:var(--cur);background:color-mix(in srgb,var(--cur) 12%,var(--card))}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt[disabled]{cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-weight:700;box-shadow:0 2px 0 var(--line)}
+.chip.used{opacity:.25;pointer-events:none}
+.seq{min-height:62px;border:2px dashed var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:6px;margin:6px 0 10px}
+.seq .chip{display:flex;align-items:center;gap:10px;text-align:left;border-color:var(--cur)}
+.seq .n{background:var(--cur);color:#fff;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;flex:none}
+.seq .chip.right{border-color:var(--ok);background:var(--ok-bg)}
+.seq .chip.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.seq .empty{color:var(--muted);font-size:.9rem;padding:10px}
+.match{display:grid;gap:10px;margin:6px 0}
+.mrow{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;align-items:center}
+.mrow b{font-weight:700}
+select{width:100%;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-weight:600}
+select.right{border-color:var(--ok);background:var(--ok-bg)}
+select.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.gap{font-size:1.1rem;line-height:2.4}
+.gap select{width:auto;display:inline-block;padding:6px 8px;margin:0 4px}
+/* Rückmeldung */
+.fb{margin-top:16px;border-radius:14px;padding:14px 16px;animation:pop .25s ease}
+.fb.ok{background:var(--ok-bg)} .fb.bad{background:var(--bad-bg)} .fb.idk{background:var(--idk-bg)}
+.fb strong{display:block;font-size:1.1rem;margin-bottom:4px}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+.idkbtn{display:block;margin:14px auto 0;color:var(--muted);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:8px}
+/* Selbsteinschätzung */
+.rate{display:grid;gap:10px}
+.rate .opt{display:flex;gap:12px;align-items:center}
+.rate .e{font-size:1.5rem}
+/* Ergebnis */
+.res{display:grid;gap:10px;margin:14px 0}
+.resrow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;border-radius:14px;background:var(--bg)}
+.resrow .ico{font-size:1.6rem}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.05rem;font-weight:700;background:var(--bg);border:2px dashed var(--line);border-radius:12px;padding:12px;text-align:center;word-break:break-all;margin:8px 0 14px}
+.big{font-size:3rem;text-align:center;line-height:1;margin:6px 0 10px}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-12px;width:10px;height:14px;border-radius:2px;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.8}}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (min-width:700px){html,body{font-size:19px} #app{max-width:760px;padding-top:28px} .station{min-height:170px}}
+.foot{margin-top:22px;text-align:center}
+.foot button{color:var(--muted);font-size:.85rem;text-decoration:underline}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ---------- Inhalte: Bildungsplan BW 2016, Biologie Sek I, Klassen 7/8/9 ---------- */
+const STATIONS=[
+ {id:"Z",title:"Zelle & Stoffwechsel",icon:"🔬",color:"var(--z)",hex:"#2f9e6e",bp:"3.2.1",
+  topics:"Zellaufbau, Mikroskop, Fotosynthese, Zellatmung",
+  qs:[
+   {type:"multi",q:"Welche Bestandteile gibt es <b>nur in Pflanzenzellen</b>? Wähle alle richtigen aus.",
+    options:["Zellwand","Zellkern","Chloroplasten","Zellmembran","große Vakuole","Mitochondrien"],answer:[0,2,4],
+    explain:"Zellwand, Chloroplasten und große Vakuole haben nur Pflanzenzellen. Zellkern, Zellmembran und Mitochondrien haben beide."},
+   {type:"gap",q:"Ergänze die Wortgleichung der Fotosynthese:",
+    parts:["Kohlenstoffdioxid + ",0," → Traubenzucker + ",1],
+    blanks:[{options:["Wasser","Sauerstoff","Stickstoff","Zucker"],answer:0},{options:["Wasser","Sauerstoff","Kohlenstoffdioxid","Licht"],answer:1}],
+    explain:"Kohlenstoffdioxid + Wasser → Traubenzucker + Sauerstoff. Die Energie dafür liefert das Licht, eingefangen vom Chlorophyll."},
+   {type:"single",q:"Wozu braucht jede Zelle die Zellatmung?",
+    options:["Um Sauerstoff herzustellen","Um Energie aus Traubenzucker freizusetzen","Um sich zu teilen","Um Wasser aufzunehmen"],answer:1,
+    explain:"Bei der Zellatmung wird Traubenzucker mit Sauerstoff abgebaut. Dabei wird Energie frei, die die Zelle zum Leben braucht."},
+   {type:"single",q:"Am Mikroskop: Okular 10×, Objektiv 40×. Wie stark ist die Gesamtvergrößerung?",
+    options:["50-fach","400-fach","4-fach","4000-fach"],answer:1,
+    explain:"Die Vergrößerungen werden multipliziert: 10 × 40 = 400-fach."}
+  ]},
+ {id:"K",title:"Mein Körper",icon:"🫀",color:"var(--k)",hex:"#e0533d",bp:"3.2.2.1–3.2.2.4",
+  topics:"Bewegung, Verdauung, Blut & Kreislauf, Pubertät",
+  qs:[
+   {type:"single",q:"Du beugst den Arm. Was machen Bizeps (Beuger) und Trizeps (Strecker)?",
+    options:["Beide ziehen sich zusammen","Bizeps zieht sich zusammen, Trizeps erschlafft","Trizeps zieht sich zusammen, Bizeps erschlafft","Beide erschlaffen"],answer:1,
+    explain:"Muskeln können nur ziehen, nicht drücken. Deshalb arbeiten sie als Gegenspieler: Einer zieht, der andere wird gedehnt."},
+   {type:"order",q:"Bring die Stationen der Nahrung in die richtige Reihenfolge.",
+    items:["Mund","Speiseröhre","Magen","Dünndarm","Dickdarm"],
+    explain:"Mund → Speiseröhre → Magen → Dünndarm → Dickdarm."},
+   {type:"single",q:"In welchem Organ gelangen die meisten Nährstoffe ins Blut?",
+    options:["Magen","Dünndarm","Dickdarm","Leber"],answer:1,
+    explain:"Im Dünndarm. Seine Darmzotten vergrößern die Oberfläche enorm, so gelangen die Nährstoffe schnell ins Blut."},
+   {type:"match",q:"Was ist die Aufgabe der Blutbestandteile?",
+    pairs:[["Rote Blutkörperchen","Sauerstoff transportieren"],["Weiße Blutkörperchen","Krankheitserreger abwehren"],["Blutplättchen","Wunden verschließen"]],
+    explain:"Rote → Sauerstoff, Weiße → Abwehr, Blutplättchen → Blutgerinnung und Wundverschluss."},
+   {type:"single",q:"Welche Blutgefäße führen das Blut <b>vom Herzen weg</b>?",
+    options:["Venen","Arterien","Kapillaren","Lymphgefäße"],answer:1,
+    explain:"Arterien führen vom Herzen weg, Venen zum Herzen hin. Kapillaren sind die feinsten Gefäße dazwischen."},
+   {type:"single",q:"Was löst die körperlichen Veränderungen in der Pubertät aus?",
+    options:["Vitamine","Hormone","Nerven","Bakterien"],answer:1,
+    explain:"Geschlechtshormone wie Testosteron und Östrogen steuern Stimmbruch, Brustwachstum, Behaarung und mehr."}
+  ]},
+ {id:"I",title:"Nerven & Abwehr",icon:"⚡",color:"var(--i)",hex:"#6b5bd6",bp:"3.2.2.5–3.2.2.6",
+  topics:"Sinnesorgane, Nervensystem, Immunsystem, Impfung",
+  qs:[
+   {type:"match",q:"Welcher Reiz gehört zu welchem Sinnesorgan?",
+    pairs:[["Auge","Licht"],["Ohr","Schall"],["Nase","Duftstoffe"],["Haut","Druck und Temperatur"]],
+    explain:"Jedes Sinnesorgan hat Sinneszellen, die auf einen bestimmten Reiz spezialisiert sind."},
+   {type:"order",q:"Du fasst auf eine heiße Herdplatte. Bring den Weg vom Reiz zur Reaktion in die richtige Reihenfolge.",
+    items:["Sinneszellen in der Haut","Sensorischer Nerv","Rückenmark","Motorischer Nerv","Muskel zieht die Hand weg"],
+    explain:"Das ist ein Reflex: Das Rückenmark schaltet direkt um, das Gehirn wird erst danach informiert. Darum geht es so schnell."},
+   {type:"single",q:"Gegen welche Krankheitserreger helfen Antibiotika?",
+    options:["Gegen Viren","Gegen Bakterien","Gegen beide","Gegen keine von beiden"],answer:1,
+    explain:"Antibiotika wirken nur gegen Bakterien. Viren haben keinen eigenen Stoffwechsel und vermehren sich in unseren Zellen."},
+   {type:"single",q:"Warum wird man nach einer Impfung oft nicht mehr krank?",
+    options:["Die Impfung tötet alle Erreger im Körper","Der Körper bildet Gedächtniszellen und erkennt den Erreger später schneller","Die Impfung macht das Blut dicker","Impfungen enthalten Antibiotika"],answer:1,
+    explain:"Bei der Impfung lernt das Immunsystem den Erreger ungefährlich kennen. Gedächtniszellen sorgen dafür, dass es beim echten Erreger sofort reagiert."}
+  ]},
+ {id:"O",title:"Ökologie",icon:"🌿",color:"var(--o)",hex:"#c98a12",bp:"3.2.3",
+  topics:"Nahrungsketten, Ökosystem, Stoffkreislauf",
+  qs:[
+   {type:"order",q:"Bilde eine Nahrungskette: Wer wird von wem gefressen? Beginne mit dem, was am Anfang steht.",
+    items:["Gras","Hase","Fuchs"],
+    explain:"Gras → Hase → Fuchs. Der Pfeil zeigt immer in die Richtung, in die Energie und Stoffe weitergegeben werden."},
+   {type:"match",q:"Ordne jedem Lebewesen seine Rolle im Ökosystem zu.",
+    pairs:[["Gras","Produzent"],["Hase","Konsument"],["Pilz","Destruent"]],
+    explain:"Produzenten stellen durch Fotosynthese Nährstoffe her. Konsumenten fressen andere Lebewesen. Destruenten zersetzen tote Reste."},
+   {type:"single",q:"Was machen Destruenten wie Bakterien, Pilze und Regenwürmer?",
+    options:["Sie betreiben Fotosynthese","Sie zersetzen tote Lebewesen zu Mineralstoffen","Sie fressen nur Pflanzen","Sie sind Krankheitserreger"],answer:1,
+    explain:"Destruenten zersetzen tote Reste. Die Mineralstoffe nutzen Pflanzen wieder. So schließt sich der Stoffkreislauf."},
+   {type:"single",q:"In einem Wald verschwinden plötzlich alle Füchse. Was passiert wahrscheinlich zuerst?",
+    options:["Es gibt weniger Hasen","Es gibt mehr Hasen","Es wächst mehr Gras","Nichts ändert sich"],answer:1,
+    explain:"Ohne Fressfeind vermehren sich die Hasen stark. Danach wird das Gras knapp. Alles im Nahrungsnetz hängt zusammen."}
+  ]}
+];
+const RATES=[{e:"🤷",t:"Hatten wir nicht"},{e:"🤏",t:"Hatten wir, kann ich aber kaum noch"},{e:"💪",t:"Kann ich gut erklären"}];
+const INTERESTS=["Zelle & Stoffwechsel","Mein Körper","Nerven & Sinne","Immunsystem & Krankheiten","Ökologie & Umwelt","Sexualität & Fortpflanzung"];
+
+/* ---------- Zustand ---------- */
+const KEY="bio9e-diagnose-v1";
+let S=load()||{name:"",ratings:{},ans:{},interest:null,finished:false};
+let V={screen:S.name?(S.finished?"end":"map"):"start",st:null,qi:0,tmp:null,checked:false,result:null};
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const qid=(st,i)=>st.id+i;
+const stDone=st=>st.qs.every((q,i)=>S.ans[qid(st,i)]);
+function stScore(st){let r=0,idk=0;st.qs.forEach((q,i)=>{const a=S.ans[qid(st,i)];if(a==="r")r++;if(a==="?")idk++});return{r,idk,n:st.qs.length}}
+const totalStars=()=>Object.values(S.ans).filter(a=>a==="r").length;
+const totalQ=STATIONS.reduce((s,st)=>s+st.qs.length,0);
+
+/* ---------- Bildschirme ---------- */
+function render(){
+  const a=$("#app");
+  if(V.screen==="start")a.innerHTML=startView();
+  else if(V.screen==="map")a.innerHTML=mapView();
+  else if(V.screen==="rate")a.innerHTML=rateView();
+  else if(V.screen==="q")a.innerHTML=qView();
+  else if(V.screen==="stdone")a.innerHTML=stDoneView();
+  else if(V.screen==="interest")a.innerHTML=interestView();
+  else if(V.screen==="end")a.innerHTML=endView();
+  window.scrollTo(0,0);
+}
+function topbar(){return `<div class="top"><div class="brand">Bio-Check <span>9E</span></div><div class="pill">⭐ ${totalStars()}</div></div>`}
+
+function startView(){return `${topbar()}
+ <div class="card">
+  <div class="big">🧬</div>
+  <h1>Bio-Check: Was weißt du schon?</h1>
+  <p>Vier Stationen aus Klasse 7 und 8. Du entscheidest selbst, in welcher Reihenfolge und wie schnell.</p>
+  <p class="muted small"><b>Das ist kein Test mit Note.</b> Wenn du etwas nicht weißt, tippe einfach auf „Weiß ich nicht“. Das hilft mehr als raten, denn so sehe ich, was wir noch üben müssen.</p>
+  <label for="nm" class="small"><b>Dein Vorname</b></label>
+  <input id="nm" type="text" autocomplete="off" maxlength="30" value="${esc(S.name)}" placeholder="z. B. Mia">
+  <button class="btn" id="go">Los geht’s</button>
+ </div>`}
+
+function mapView(){
+  const all=STATIONS.every(stDone);
+  return `${topbar()}
+  <h2>Hi ${esc(S.name)}! Wähle eine Station.</h2>
+  <div class="bar" style="margin-bottom:16px"><i style="width:${Object.keys(S.ans).length/totalQ*100}%;background:var(--ink)"></i></div>
+  <div class="map">${STATIONS.map((st,k)=>{const d=stDone(st),sc=stScore(st);return `
+   <button class="station${d?" done":""}" style="background:${st.color}" data-st="${k}">
+    <div class="ico">${st.icon}</div>
+    <div><div class="t">${st.title}</div><div class="s">${d?`<span class="stars">${"★".repeat(sc.r)}${"☆".repeat(sc.n-sc.r)}</span>`:st.topics}</div></div>
+   </button>`}).join("")}</div>
+  <div style="margin-top:18px">${all?`<button class="btn" id="fin">Zur Auswertung 🏁</button>`:`<p class="muted small" style="text-align:center">Schaffe alle vier Stationen, dann bekommst du deine Auswertung.</p>`}</div>
+  <div class="foot"><button id="reset">Neu starten (anderer Name)</button></div>`}
+
+function rateView(){const st=STATIONS[V.st];return `${topbar()}
+ <div class="card" style="--cur:${st.hex}">
+  <div class="tag" style="color:${st.color}">${st.icon} Station: ${st.title}</div>
+  <h2>Bevor es losgeht: Wie gut kennst du dich hier aus?</h2>
+  <p class="muted small">${st.topics}</p>
+  <div class="rate">${RATES.map((r,k)=>`<button class="opt" data-rate="${k}"><span class="e">${r.e}</span>${r.t}</button>`).join("")}</div>
+ </div>
+ <div class="foot"><button id="back">← Zurück zur Übersicht</button></div>`}
+
+function qView(){
+  const st=STATIONS[V.st],q=st.qs[V.qi],t=V.tmp;
+  const prog=(V.qi+(V.checked?1:0))/st.qs.length*100;
+  let body="";
+  if(q.type==="single"){
+    body=`<div class="opts">${t.order.map(k=>{let c="";if(V.checked){if(k===q.answer)c="right";else if(k===t.pick)c="wrong"}
+      return `<button class="opt ${c}" data-pick="${k}" ${V.checked?"disabled":""}>${q.options[k]}</button>`}).join("")}</div>`;
+  }else if(q.type==="multi"){
+    body=`<p class="muted small">Mehrere Antworten möglich.</p><div class="opts">${t.order.map(k=>{let c=t.sel.includes(k)?"sel":"";
+      if(V.checked){const shouldBe=q.answer.includes(k);c=shouldBe?"right":(t.sel.includes(k)?"wrong":"")}
+      return `<button class="opt ${c}" data-tog="${k}" ${V.checked?"disabled":""}>${V.checked&&q.answer.includes(k)?"✓ ":""}${q.options[k]}</button>`}).join("")}</div>`;
+  }else if(q.type==="order"){
+    body=`<p class="muted small">Tippe die Kärtchen in der richtigen Reihenfolge an. Antippen in der Liste nimmt sie wieder heraus.</p>
+     <div class="seq">${t.seq.length?t.seq.map((k,p)=>{let c="";if(V.checked)c=k===p?"right":"wrong";
+       return `<button class="chip ${c}" data-un="${p}" ${V.checked?"disabled":""}><span class="n">${p+1}</span>${q.items[k]}</button>`}).join(""):`<div class="empty">Hier entsteht deine Reihenfolge …</div>`}</div>
+     ${V.checked?"":`<div class="chips">${t.pool.map(k=>`<button class="chip ${t.seq.includes(k)?"used":""}" data-add="${k}">${q.items[k]}</button>`).join("")}</div>`}`;
+  }else if(q.type==="match"){
+    body=`<div class="match">${q.pairs.map((p,k)=>{let c="";if(V.checked)c=t.sel[k]===k?"right":"wrong";
+      return `<div class="mrow"><b>${p[0]}</b><select data-m="${k}" class="${c}" ${V.checked?"disabled":""}><option value="">– wählen –</option>${t.order.map(j=>`<option value="${j}" ${t.sel[k]===j?"selected":""}>${q.pairs[j][1]}</option>`).join("")}</select></div>`}).join("")}</div>`;
+  }else if(q.type==="gap"){
+    body=`<div class="gap">${q.parts.map(p=>{if(typeof p==="string")return esc(p);const b=q.blanks[p];let c="";if(V.checked)c=t.sel[p]===b.answer?"right":"wrong";
+      return `<select data-g="${p}" class="${c}" ${V.checked?"disabled":""}><option value="">…</option>${b.options.map((o,j)=>`<option value="${j}" ${t.sel[p]===j?"selected":""}>${o}</option>`).join("")}</select>`}).join("")}</div>`;
+  }
+  const ready=canCheck();
+  let fb="";
+  if(V.checked){
+    const r=V.result;
+    fb=`<div class="fb ${r==="r"?"ok":r==="?"?"idk":"bad"}"><strong>${r==="r"?pick(["Richtig! ⭐","Stark! ⭐","Genau so! ⭐"]):r==="?"?"Kein Problem – das lernen wir.":"Knapp daneben."}</strong>${q.explain}</div>
+      <button class="btn" id="next" style="margin-top:14px">${V.qi<st.qs.length-1?"Weiter →":"Station abschließen"}</button>`;
+  }
+  return `<div class="qhead"><button class="x" id="back" aria-label="Zur Übersicht">✕</button><div class="bar"><i style="width:${prog}%;background:${st.color}"></i></div><div class="pill">⭐ ${totalStars()}</div></div>
+   <div class="card" id="qc" style="--cur:${st.hex}">
+    <div class="tag" style="color:${st.color}">${st.icon} ${st.title} · Frage ${V.qi+1} von ${st.qs.length}</div>
+    <h2>${q.q}</h2>
+    ${body}
+    ${V.checked?fb:`${q.type!=="single"?`<button class="btn" id="check" ${ready?"":"disabled"} style="margin-top:14px">Prüfen</button>`:""}<button class="idkbtn" id="idk">Weiß ich nicht</button>`}
+   </div>`;
+}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+function stDoneView(){const st=STATIONS[V.st],sc=stScore(st);return `${topbar()}
+ <div class="card" style="text-align:center">
+  <div class="big">${st.icon}</div>
+  <h2>Station „${st.title}“ geschafft!</h2>
+  <div class="stars" style="font-size:2rem;color:${st.color}">${"★".repeat(sc.r)}${"☆".repeat(sc.n-sc.r)}</div>
+  <p class="muted">${sc.r} von ${sc.n} richtig${sc.idk?` · ${sc.idk}× „Weiß ich nicht“`:""}</p>
+  <button class="btn" id="tomap">Zur Übersicht</button>
+ </div>`}
+
+function interestView(){return `${topbar()}
+ <div class="card" style="--cur:var(--z)">
+  <h2>Letzte Frage: Was würde dich in Bio am meisten interessieren?</h2>
+  <div class="opts">${INTERESTS.map((x,k)=>`<button class="opt ${S.interest===k?"sel":""}" data-int="${k}">${x}</button>`).join("")}</div>
+  <button class="btn" id="toend" style="margin-top:14px" ${S.interest===null?"disabled":""}>Auswertung anzeigen</button>
+ </div>`}
+
+function code(){
+  return STATIONS.map(st=>{const sc=stScore(st),r=S.ratings[st.id];return `${st.id}${sc.r}/${sc.n}${sc.idk?"?"+sc.idk:""}s${r===undefined?"-":r}`}).join(" ")+` i${S.interest===null?"-":S.interest}`;
+}
+function endView(){
+  return `${topbar()}
+  <div class="card">
+   <div class="big">🏁</div>
+   <h1 style="text-align:center">Geschafft, ${esc(S.name)}!</h1>
+   <p style="text-align:center" class="muted">${totalStars()} von ${totalQ} Sternen</p>
+   <div class="res">${STATIONS.map(st=>{const sc=stScore(st),r=S.ratings[st.id];return `
+    <div class="resrow"><div class="ico">${st.icon}</div>
+     <div><b>${st.title}</b><div class="small muted">Selbst: ${r===undefined?"–":RATES[r].e+" "+RATES[r].t}</div>
+      <div class="bar" style="margin-top:6px"><i style="width:${sc.r/sc.n*100}%;background:${st.color}"></i></div></div>
+     <div style="font-weight:800">${sc.r}/${sc.n}</div></div>`}).join("")}</div>
+   <p class="small"><b>Dein Ergebnis-Code</b> – schreib ihn ab oder zeig diesen Bildschirm deinem Lehrer:</p>
+   <div class="code">${esc(S.name)} · ${code()}</div>
+   <button class="btn ghost" id="tomap">Zurück zur Übersicht</button>
+  </div>
+  <div class="foot"><button id="reset">Neu starten (anderer Name)</button></div>`}
+
+/* ---------- Logik ---------- */
+function initTmp(){
+  const q=STATIONS[V.st].qs[V.qi];V.checked=false;V.result=null;
+  if(q.type==="single")V.tmp={order:shuffle(q.options.map((_,k)=>k)),pick:null};
+  if(q.type==="multi")V.tmp={order:shuffle(q.options.map((_,k)=>k)),sel:[]};
+  if(q.type==="order"){let p;do{p=shuffle(q.items.map((_,k)=>k))}while(p.every((v,k)=>v===k));V.tmp={pool:p,seq:[]}}
+  if(q.type==="match")V.tmp={order:shuffle(q.pairs.map((_,k)=>k)),sel:q.pairs.map(()=>null)};
+  if(q.type==="gap")V.tmp={sel:q.blanks.map(()=>null)};
+}
+function canCheck(){const q=STATIONS[V.st].qs[V.qi],t=V.tmp;
+  if(q.type==="multi")return t.sel.length>0;
+  if(q.type==="order")return t.seq.length===q.items.length;
+  if(q.type==="match"||q.type==="gap")return t.sel.every(v=>v!==null);
+  return true}
+function evaluate(){const q=STATIONS[V.st].qs[V.qi],t=V.tmp;
+  if(q.type==="single")return t.pick===q.answer;
+  if(q.type==="multi")return t.sel.length===q.answer.length&&q.answer.every(k=>t.sel.includes(k));
+  if(q.type==="order")return t.seq.every((k,p)=>k===p);
+  if(q.type==="match")return t.sel.every((v,k)=>v===k);
+  if(q.type==="gap")return t.sel.every((v,k)=>v===q.blanks[k].answer)}
+function finish(res){
+  const st=STATIONS[V.st];V.checked=true;V.result=res;S.ans[qid(st,V.qi)]=res;save();render();
+  if(res==="r")burst(14);else if(res==="f"){const c=$("#qc");c&&c.classList.add("shake")}
+  const n=$("#next");n&&n.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function burst(n){
+  const box=document.createElement("div");box.className="confetti";
+  const cols=["#2f9e6e","#e0533d","#6b5bd6","#c98a12","#3aa0d8"];
+  for(let i=0;i<n;i++){const e=document.createElement("i");e.style.left=Math.random()*100+"vw";e.style.background=cols[i%cols.length];e.style.animationDelay=Math.random()*.3+"s";box.appendChild(e)}
+  document.body.appendChild(box);setTimeout(()=>box.remove(),2200);
+}
+function openStation(k){
+  V.st=k;const st=STATIONS[k];
+  if(S.ratings[st.id]===undefined){V.screen="rate";render();return}
+  const first=st.qs.findIndex((q,i)=>!S.ans[qid(st,i)]);
+  if(first<0){V.screen="stdone";render();return}
+  V.qi=first;initTmp();V.screen="q";render();
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b||b.disabled)return;
+  const d=b.dataset;
+  if(b.id==="go"){const n=$("#nm").value.trim();if(!n){$("#nm").focus();$("#nm").classList.add("shake");return}S.name=n;save();V.screen="map";render();return}
+  if(d.st!==undefined){openStation(+d.st);return}
+  if(d.rate!==undefined){S.ratings[STATIONS[V.st].id]=+d.rate;save();openStation(V.st);return}
+  if(b.id==="back"||b.id==="tomap"){V.screen="map";render();return}
+  if(b.id==="fin"){V.screen="interest";render();return}
+  if(d.int!==undefined){S.interest=+d.int;save();render();return}
+  if(b.id==="toend"){S.finished=true;save();V.screen="end";render();burst(60);return}
+  if(b.id==="reset"){if(confirmReset()){S={name:"",ratings:{},ans:{},interest:null,finished:false};save();V.screen="start";render()}return}
+  if(V.screen!=="q")return;
+  const t=V.tmp;
+  if(d.pick!==undefined){t.pick=+d.pick;finish(evaluate()?"r":"f");return}
+  if(d.tog!==undefined){const k=+d.tog,i=t.sel.indexOf(k);i<0?t.sel.push(k):t.sel.splice(i,1);render();return}
+  if(d.add!==undefined){t.seq.push(+d.add);render();return}
+  if(d.un!==undefined){t.seq.splice(+d.un,1);render();return}
+  if(b.id==="check"){finish(evaluate()?"r":"f");return}
+  if(b.id==="idk"){finish("?");return}
+  if(b.id==="next"){const st=STATIONS[V.st];
+    if(V.qi<st.qs.length-1){V.qi++;initTmp();render()}else{V.screen="stdone";render();burst(40)}return}
+});
+let resetArmed=0;
+function confirmReset(){ /* zweimal tippen statt Browser-Dialog */
+  const now=Date.now();if(now-resetArmed<4000)return true;resetArmed=now;
+  const f=document.querySelector("#reset");if(f)f.textContent="Wirklich? Nochmal tippen – alles wird gelöscht";return false}
+document.addEventListener("change",e=>{
+  const s=e.target;if(V.screen!=="q")return;
+  if(s.dataset.m!==undefined){V.tmp.sel[+s.dataset.m]=s.value===""?null:+s.value;render()}
+  if(s.dataset.g!==undefined){V.tmp.sel[+s.dataset.g]=s.value===""?null:+s.value;render()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="nm")$("#go").click()});
+render();
+</script>
+</body>
+</html>
