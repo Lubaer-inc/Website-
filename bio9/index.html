@@ -458,7 +458,10 @@ function interestView(){return `${topbar()}
  </div>`}
 
 function code(){
-  return STATIONS.map(st=>{const sc=stScore(st),r=S.ratings[st.id];return `${st.id}${sc.r}/${sc.n}${sc.idk?"?"+sc.idk:""}s${r===undefined?"-":r}`}).join(" ")+` i${S.interest===null?"-":S.interest}`;
+  const d=n=>n<10?String(n):String.fromCharCode(55+n); /* 10=A, 11=B */
+  const r=STATIONS.map(st=>d(stScore(st).r)).join("");
+  const s=STATIONS.map(st=>{const v=S.ratings[st.id];return v===undefined?"-":String(v)}).join("");
+  return r.slice(0,4)+" "+r.slice(4)+" – "+s.slice(0,4)+" "+s.slice(4)+" – "+(S.interest===null?"-":S.interest+1);
 }
 function endView(){
   return `${topbar()}
@@ -472,7 +475,7 @@ function endView(){
       <div class="bar" style="margin-top:6px"><i style="width:${sc.r/sc.n*100}%;background:${st.color}"></i></div></div>
      <div style="font-weight:800">${sc.r}/${sc.n}</div></div>`}).join("")}</div>
    <p class="small"><b>Dein Ergebnis-Code</b> – schreib ihn ab oder zeig diesen Bildschirm deinem Lehrer:</p>
-   <div class="code">${esc(S.name)} · ${code()}</div>
+   <div class="code" style="font-size:1.6rem;letter-spacing:.08em">${code()}</div>
    <button class="btn ghost" id="tomap">Zurück zur Übersicht</button>
   </div>
   <div class="foot"><button id="reset">Neu starten (anderer Name)</button></div>`}
