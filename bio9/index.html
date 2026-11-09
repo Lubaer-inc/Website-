@@ -2,22 +2,24 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bio-Check 9E</title>
 <style>
 :root{
   --bg:#f4f1ea; --card:#ffffff; --ink:#1d2321; --muted:#66706c; --line:#e1ddd3;
   --ok:#1f9d5c; --ok-bg:#e3f5ea; --bad:#d4483b; --bad-bg:#fbe6e3; --idk:#8a7d5c; --idk-bg:#f1ecdf;
-  --z:#2f9e6e; --k:#e0533d; --i:#6b5bd6; --o:#c98a12;
+  --z:#2f9e6e; --c1:#2f9e6e; --c2:#d9772b; --c3:#6f7d8a; --c4:#e0533d; --c5:#d1497f; --c6:#6b5bd6; --c7:#1f8fb3; --c8:#b8860b;
   --shadow:0 2px 0 rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.06);
   --r:18px;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 @media (prefers-color-scheme:dark){
-  :root{--bg:#141816;--card:#1e2421;--ink:#eef1ef;--muted:#9ba6a1;--line:#2e3633;
+  :root:not([data-theme="light"]){--bg:#141816;--card:#1e2421;--ink:#eef1ef;--muted:#9ba6a1;--line:#2e3633;
     --ok-bg:#163526;--bad-bg:#3a1d1a;--idk-bg:#2e2a20;--shadow:0 2px 0 rgba(0,0,0,.3)}
 }
+:root[data-theme="dark"]{--bg:#141816;--card:#1e2421;--ink:#eef1ef;--muted:#9ba6a1;--line:#2e3633;
+    --ok-bg:#163526;--bad-bg:#3a1d1a;--idk-bg:#2e2a20;--shadow:0 2px 0 rgba(0,0,0,.3)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button,select{font:inherit;color:inherit}
@@ -113,83 +115,232 @@ select.wrong{border-color:var(--bad);background:var(--bad-bg)}
 "use strict";
 /* ---------- Inhalte: Bildungsplan BW 2016, Biologie Sek I, Klassen 7/8/9 ---------- */
 const STATIONS=[
- {id:"Z",title:"Zelle & Stoffwechsel",icon:"🔬",color:"var(--z)",hex:"#2f9e6e",bp:"3.2.1",
-  topics:"Zellaufbau, Mikroskop, Fotosynthese, Zellatmung",
+ {id:"Z",title:"Zelle & Stoffwechsel",icon:"🔬",color:"var(--c1)",hex:"#2f9e6e",bp:"3.2.1",
+  topics:"Zellaufbau, Mikroskop, Gewebe, Fotosynthese, Zellatmung",
   qs:[
    {type:"multi",q:"Welche Bestandteile gibt es <b>nur in Pflanzenzellen</b>? Wähle alle richtigen aus.",
     options:["Zellwand","Zellkern","Chloroplasten","Zellmembran","große Vakuole","Mitochondrien"],answer:[0,2,4],
     explain:"Zellwand, Chloroplasten und große Vakuole haben nur Pflanzenzellen. Zellkern, Zellmembran und Mitochondrien haben beide."},
+   {type:"match",q:"Welche Aufgabe hat welcher Zellbestandteil?",
+    pairs:[["Zellkern","Steuerzentrale mit der Erbinformation"],["Mitochondrium","Kraftwerk: Zellatmung"],["Chloroplast","Ort der Fotosynthese"],["Zellmembran","grenzt ab und regelt den Stoffaustausch"]],
+    explain:"Zellkern steuert, Mitochondrien gewinnen Energie, Chloroplasten betreiben Fotosynthese, die Membran grenzt die Zelle ab."},
+   {type:"single",q:"Am Mikroskop: Okular 10×, Objektiv 40×. Wie stark ist die Gesamtvergrößerung?",
+    options:["50-fach","400-fach","4-fach","4000-fach"],answer:1,
+    explain:"Die Vergrößerungen werden multipliziert: 10 × 40 = 400-fach."},
+   {type:"single",q:"Wie wächst ein Lebewesen, zum Beispiel ein Baby oder eine Pflanze?",
+    options:["Die Zellen werden immer größer","Durch Zellteilung entstehen immer mehr Zellen","Zellen entstehen aus Nahrung","Zellen verschmelzen miteinander"],answer:1,
+    explain:"Wachstum beruht vor allem auf Zellteilung: Aus einer Zelle werden zwei, daraus vier und so weiter."},
+   {type:"single",q:"Ein Laubblatt ist ein Organ. Woraus besteht es?",
+    options:["Aus einer einzigen Riesenzelle","Aus verschiedenen Geweben, die zusammenarbeiten","Nur aus Chloroplasten","Aus Knochen und Muskeln"],answer:1,
+    explain:"Zellen gleicher Aufgabe bilden Gewebe, mehrere Gewebe bilden ein Organ. Im Blatt z. B. Abschlussgewebe, Palisadengewebe und Leitbündel."},
    {type:"gap",q:"Ergänze die Wortgleichung der Fotosynthese:",
     parts:["Kohlenstoffdioxid + ",0," → Traubenzucker + ",1],
     blanks:[{options:["Wasser","Sauerstoff","Stickstoff","Zucker"],answer:0},{options:["Wasser","Sauerstoff","Kohlenstoffdioxid","Licht"],answer:1}],
-    explain:"Kohlenstoffdioxid + Wasser → Traubenzucker + Sauerstoff. Die Energie dafür liefert das Licht, eingefangen vom Chlorophyll."},
-   {type:"single",q:"Wozu braucht jede Zelle die Zellatmung?",
-    options:["Um Sauerstoff herzustellen","Um Energie aus Traubenzucker freizusetzen","Um sich zu teilen","Um Wasser aufzunehmen"],answer:1,
-    explain:"Bei der Zellatmung wird Traubenzucker mit Sauerstoff abgebaut. Dabei wird Energie frei, die die Zelle zum Leben braucht."},
-   {type:"single",q:"Am Mikroskop: Okular 10×, Objektiv 40×. Wie stark ist die Gesamtvergrößerung?",
-    options:["50-fach","400-fach","4-fach","4000-fach"],answer:1,
-    explain:"Die Vergrößerungen werden multipliziert: 10 × 40 = 400-fach."}
+    explain:"Kohlenstoffdioxid + Wasser → Traubenzucker + Sauerstoff. Die Energie dafür liefert Licht, eingefangen vom Chlorophyll."},
+   {type:"gap",q:"Ergänze die Wortgleichung der Zellatmung:",
+    parts:["Traubenzucker + ",0," → Kohlenstoffdioxid + ",1," + Energie"],
+    blanks:[{options:["Sauerstoff","Wasser","Licht","Stickstoff"],answer:0},{options:["Sauerstoff","Wasser","Traubenzucker","Licht"],answer:1}],
+    explain:"Traubenzucker + Sauerstoff → Kohlenstoffdioxid + Wasser + Energie. Das ist genau die Umkehrung der Fotosynthese."},
+   {type:"single",q:"Versuch: Eine Wasserpflanze steht unter einer hellen Lampe und bildet Gasbläschen. Welches Gas ist das?",
+    options:["Kohlenstoffdioxid","Sauerstoff","Stickstoff","Wasserdampf"],answer:1,
+    explain:"Bei der Fotosynthese entsteht Sauerstoff. Je heller das Licht, desto mehr Bläschen."}
   ]},
- {id:"K",title:"Mein Körper",icon:"🫀",color:"var(--k)",hex:"#e0533d",bp:"3.2.2.1–3.2.2.4",
-  topics:"Bewegung, Verdauung, Blut & Kreislauf, Pubertät",
+ {id:"E",title:"Ernährung & Verdauung",icon:"🍎",color:"var(--c2)",hex:"#d9772b",bp:"3.2.2.2",
+  topics:"Nährstoffe, Energiebedarf, gesunde Ernährung, Verdauung, Enzyme",
+  qs:[
+   {type:"match",q:"Welche Aufgabe haben diese Bestandteile der Nahrung?",
+    pairs:[["Kohlenhydrate","schnelle Energie"],["Eiweiße (Proteine)","Baustoff für Muskeln und Zellen"],["Fette","Energiespeicher"],["Ballaststoffe","regen die Verdauung an"]],
+    explain:"Kohlenhydrate und Fette sind Brennstoffe, Eiweiße vor allem Baustoffe, Ballaststoffe halten den Darm in Schwung."},
+   {type:"single",q:"Aus welchen Bausteinen sind Eiweiße aufgebaut?",
+    options:["Aus Einfachzuckern","Aus Aminosäuren","Aus Fettsäuren","Aus Mineralstoffen"],answer:1,
+    explain:"Eiweiße sind Ketten aus Aminosäuren. Stärke besteht aus Einfachzuckern, Fette aus Glycerin und Fettsäuren."},
+   {type:"single",q:"Was ist der <b>Grundumsatz</b>?",
+    options:["Die Energie, die man beim Sport verbraucht","Die Energie, die der Körper in völliger Ruhe braucht","Die Energie in einer Mahlzeit","Die Energie, die man im Fett speichert"],answer:1,
+    explain:"Der Grundumsatz hält Atmung, Herzschlag und Körpertemperatur in Ruhe aufrecht. Leistungsumsatz kommt für Bewegung dazu."},
+   {type:"single",q:"Ein Müsliriegel hat laut Packung 400 kcal pro 100 g. Der Riegel wiegt 25 g. Wie viel Energie steckt darin?",
+    options:["25 kcal","100 kcal","400 kcal","1000 kcal"],answer:1,
+    explain:"25 g sind ein Viertel von 100 g. Ein Viertel von 400 kcal sind 100 kcal."},
+   {type:"single",q:"Was bedeuten die „E-Nummern“ auf Lebensmitteln?",
+    options:["Wie viele Vitamine enthalten sind","Zugelassene Zusatzstoffe, z. B. Farb- oder Konservierungsstoffe","Das Erntedatum","Die Energie in Kilojoule"],answer:1,
+    explain:"E-Nummern stehen für in der EU zugelassene Zusatzstoffe. Ein Blick auf die Zutatenliste lohnt sich."},
+   {type:"order",q:"Bring die Stationen der Nahrung in die richtige Reihenfolge.",
+    items:["Mund","Speiseröhre","Magen","Dünndarm","Dickdarm"],
+    explain:"Mund → Speiseröhre → Magen → Dünndarm → Dickdarm. Bauchspeicheldrüse und Leber geben Verdauungssäfte in den Dünndarm."},
+   {type:"single",q:"Warum hat der Dünndarm unzählige Darmzotten?",
+    options:["Damit die Nahrung langsamer rutscht","Sie vergrößern die Oberfläche, so gelangen Nährstoffe schneller ins Blut","Sie bilden Magensäure","Sie speichern Fett"],answer:1,
+    explain:"Prinzip der Oberflächenvergrößerung: Die Darmoberfläche ist so groß wie ein halbes Volleyballfeld."},
+   {type:"single",q:"Kaust du Brot lange, schmeckt es süß. Warum?",
+    options:["Brot enthält viel Zucker","Ein Enzym im Speichel spaltet Stärke in Zucker","Die Zunge erwärmt das Brot","Der Speichel ist süß"],answer:1,
+    explain:"Das Enzym Amylase im Speichel spaltet Stärke in Zuckerbausteine. Enzyme sind die „Scheren“ der Verdauung."},
+   {type:"single",q:"Welche Aussage über Essstörungen wie Magersucht oder Bulimie stimmt?",
+    options:["Das ist nur eine Phase und geht von selbst weg","Es sind ernsthafte Erkrankungen mit Suchtcharakter, und es gibt Hilfe","Das betrifft nur Erwachsene","Man kann sie am Aussehen sicher erkennen"],answer:1,
+    explain:"Essstörungen sind ernst und schaden Körper und Körperbild. Betroffene sollten sich Hilfe holen, z. B. bei Vertrauenslehrkräften oder Beratungsstellen."}
+  ]},
+ {id:"B",title:"Körperbau & Bewegung",icon:"🦴",color:"var(--c3)",hex:"#7a8794",bp:"3.2.2.1",
+  topics:"Skelett, Gelenke, Muskeln, Haltung",
   qs:[
    {type:"single",q:"Du beugst den Arm. Was machen Bizeps (Beuger) und Trizeps (Strecker)?",
     options:["Beide ziehen sich zusammen","Bizeps zieht sich zusammen, Trizeps erschlafft","Trizeps zieht sich zusammen, Bizeps erschlafft","Beide erschlaffen"],answer:1,
-    explain:"Muskeln können nur ziehen, nicht drücken. Deshalb arbeiten sie als Gegenspieler: Einer zieht, der andere wird gedehnt."},
-   {type:"order",q:"Bring die Stationen der Nahrung in die richtige Reihenfolge.",
-    items:["Mund","Speiseröhre","Magen","Dünndarm","Dickdarm"],
-    explain:"Mund → Speiseröhre → Magen → Dünndarm → Dickdarm."},
-   {type:"single",q:"In welchem Organ gelangen die meisten Nährstoffe ins Blut?",
-    options:["Magen","Dünndarm","Dickdarm","Leber"],answer:1,
-    explain:"Im Dünndarm. Seine Darmzotten vergrößern die Oberfläche enorm, so gelangen die Nährstoffe schnell ins Blut."},
+    explain:"Muskeln können nur ziehen, nicht drücken. Deshalb arbeiten sie als Gegenspieler."},
+   {type:"match",q:"Was gehört zusammen?",
+    pairs:[["Sehne","verbindet Muskel mit Knochen"],["Band","hält Knochen im Gelenk zusammen"],["Gelenkknorpel","federt Stöße ab"],["Gelenkschmiere","vermindert die Reibung"]],
+    explain:"Sehnen übertragen die Muskelkraft, Bänder stabilisieren, Knorpel und Gelenkschmiere sorgen für glatte Bewegung."},
+   {type:"single",q:"Welches Gelenk ist ein Kugelgelenk, das in alle Richtungen beweglich ist?",
+    options:["Knie","Schulter","Finger","Ellenbogen"],answer:1,
+    explain:"Schulter und Hüfte sind Kugelgelenke. Knie, Ellenbogen und Finger sind Scharniergelenke."},
+   {type:"single",q:"Warum hat die Wirbelsäule eine doppelte S-Form?",
+    options:["Damit wir größer sind","Sie federt Stöße beim Gehen und Springen ab","Damit das Herz Platz hat","Das hat keinen Grund"],answer:1,
+    explain:"Die S-Form wirkt wie eine Feder und schützt Wirbel und Gehirn vor Erschütterungen."},
+   {type:"multi",q:"Was beugt Haltungsschäden vor? Wähle alle richtigen aus.",
+    options:["Schulrucksack auf beiden Schultern tragen","Stundenlang gebückt aufs Handy schauen","Regelmäßig Sport und Bewegung","Schwere Lasten mit geradem Rücken aus den Knien heben"],answer:[0,2,3],
+    explain:"Gleichmäßig tragen, richtig heben und Bewegung stärken die Rückenmuskulatur. Dauerhaft gebeugter Nacken belastet die Wirbelsäule."}
+  ]},
+ {id:"A",title:"Atmung, Blut & Herz",icon:"🫀",color:"var(--c4)",hex:"#e0533d",bp:"3.2.2.3",
+  topics:"Atemwege, Gasaustausch, Blut, Herz und Kreislauf, Rauchen",
+  qs:[
+   {type:"order",q:"Welchen Weg nimmt die eingeatmete Luft?",
+    items:["Nase","Luftröhre","Bronchien","Lungenbläschen"],
+    explain:"Nase → Luftröhre → Bronchien → Lungenbläschen. Dort findet der Gasaustausch statt."},
+   {type:"single",q:"Was passiert in den Lungenbläschen?",
+    options:["Die Luft wird erwärmt","Sauerstoff geht ins Blut, Kohlenstoffdioxid geht aus dem Blut in die Luft","Das Blut wird gereinigt","Die Luft wird gespeichert"],answer:1,
+    explain:"Das ist der Gasaustausch. Die Lunge hat Millionen Bläschen und damit eine riesige Oberfläche."},
    {type:"match",q:"Was ist die Aufgabe der Blutbestandteile?",
-    pairs:[["Rote Blutkörperchen","Sauerstoff transportieren"],["Weiße Blutkörperchen","Krankheitserreger abwehren"],["Blutplättchen","Wunden verschließen"]],
-    explain:"Rote → Sauerstoff, Weiße → Abwehr, Blutplättchen → Blutgerinnung und Wundverschluss."},
+    pairs:[["Rote Blutkörperchen","Sauerstoff transportieren"],["Weiße Blutkörperchen","Krankheitserreger abwehren"],["Blutplättchen","Wunden verschließen"],["Blutplasma","Nährstoffe und Wärme transportieren"]],
+    explain:"Rote → Sauerstoff, Weiße → Abwehr, Plättchen → Gerinnung, Plasma → flüssiger Transportweg."},
    {type:"single",q:"Welche Blutgefäße führen das Blut <b>vom Herzen weg</b>?",
-    options:["Venen","Arterien","Kapillaren","Lymphgefäße"],answer:1,
-    explain:"Arterien führen vom Herzen weg, Venen zum Herzen hin. Kapillaren sind die feinsten Gefäße dazwischen."},
+    options:["Venen","Arterien","Lymphgefäße","Lungenbläschen"],answer:1,
+    explain:"Arterien führen vom Herzen weg, Venen zum Herzen hin. Kapillaren verbinden beide."},
+   {type:"single",q:"Wohin pumpt die <b>rechte</b> Herzhälfte das Blut?",
+    options:["In den ganzen Körper","In die Lunge","Ins Gehirn","In die Leber"],answer:1,
+    explain:"Rechte Hälfte → Lungenkreislauf (Sauerstoff tanken). Linke Hälfte → Körperkreislauf. Darum ist die linke Wand dicker."},
+   {type:"single",q:"Nach einem Sprint schlägt dein Herz schneller. Warum?",
+    options:["Weil man Angst hat","Die Muskeln brauchen mehr Sauerstoff und Energie","Das Blut wird dicker","Das Herz ist müde"],answer:1,
+    explain:"Arbeitende Muskeln brauchen mehr Sauerstoff. Puls und Atemfrequenz steigen, damit mehr davon ankommt."},
+   {type:"multi",q:"Was richtet Rauchen im Körper an? Wähle alle richtigen aus.",
+    options:["Teer verklebt die Flimmerhärchen in den Bronchien","Kohlenstoffmonoxid blockiert die roten Blutkörperchen","Nikotin macht abhängig und verengt die Blutgefäße","Rauchen stärkt die Lunge"],answer:[0,1,2],
+    explain:"Rauchen schädigt Lunge, Blut und Gefäße und macht süchtig. Nicht anzufangen ist der beste Schutz."}
+  ]},
+ {id:"F",title:"Fortpflanzung & Entwicklung",icon:"👶",color:"var(--c5)",hex:"#d1497f",bp:"3.2.2.4",
+  topics:"Befruchtung, Schwangerschaft, Verhütung, sexuelle Vielfalt",
+  qs:[
+   {type:"single",q:"Wo findet beim Menschen normalerweise die Befruchtung statt?",
+    options:["In der Gebärmutter","Im Eileiter","In der Scheide","Im Eierstock"],answer:1,
+    explain:"Im Eileiter verschmelzen Eizelle und Spermienzelle. Danach wandert der Keim in die Gebärmutter."},
+   {type:"order",q:"Bring die Entwicklung in die richtige Reihenfolge.",
+    items:["Befruchtung","Einnistung in die Gebärmutter","Embryo","Fetus","Geburt"],
+    explain:"Befruchtung → Einnistung → Embryo (Organe entstehen) → Fetus (ab ca. 9. Woche, wächst) → Geburt."},
+   {type:"single",q:"Warum ist Alkohol in der Schwangerschaft gefährlich für das Kind?",
+    options:["Ist er nicht, solange es wenig ist","Er gelangt über Plazenta und Nabelschnur ins Kind und kann es dauerhaft schädigen","Er macht nur die Mutter müde","Er schadet erst nach der Geburt"],answer:1,
+    explain:"Über die Plazenta erreicht der Alkohol das Ungeborene. Schon kleine Mengen können Organe und Gehirn schädigen."},
+   {type:"single",q:"Welches Verhütungsmittel schützt zusätzlich vor sexuell übertragbaren Infektionen wie HIV?",
+    options:["Die Pille","Das Kondom","Die Spirale","Keines davon"],answer:1,
+    explain:"Nur das Kondom schützt vor Schwangerschaft und vor Infektionen wie HIV oder Chlamydien."},
    {type:"single",q:"Was löst die körperlichen Veränderungen in der Pubertät aus?",
     options:["Vitamine","Hormone","Nerven","Bakterien"],answer:1,
-    explain:"Geschlechtshormone wie Testosteron und Östrogen steuern Stimmbruch, Brustwachstum, Behaarung und mehr."}
+    explain:"Geschlechtshormone wie Testosteron und Östrogen steuern Stimmbruch, Brustwachstum, Behaarung und mehr."},
+   {type:"single",q:"Was beschreibt der Begriff <b>Geschlechtsidentität</b>?",
+    options:["In wen man sich verliebt","Welchem Geschlecht man sich selbst zugehörig fühlt","Welche Hormone man hat","Wie man sich kleidet"],answer:1,
+    explain:"Geschlechtsidentität ist das innere Wissen, welches Geschlecht man ist. In wen man sich verliebt, nennt man sexuelle Orientierung."}
   ]},
- {id:"I",title:"Nerven & Abwehr",icon:"⚡",color:"var(--i)",hex:"#6b5bd6",bp:"3.2.2.5–3.2.2.6",
-  topics:"Sinnesorgane, Nervensystem, Immunsystem, Impfung",
+ {id:"N",title:"Sinne, Nerven & Hormone",icon:"⚡",color:"var(--c6)",hex:"#6b5bd6",bp:"3.2.2.5",
+  topics:"Sinnesorgane, Auge, Reflex, Hormone, Blutzucker, Stress",
   qs:[
    {type:"match",q:"Welcher Reiz gehört zu welchem Sinnesorgan?",
     pairs:[["Auge","Licht"],["Ohr","Schall"],["Nase","Duftstoffe"],["Haut","Druck und Temperatur"]],
     explain:"Jedes Sinnesorgan hat Sinneszellen, die auf einen bestimmten Reiz spezialisiert sind."},
+   {type:"match",q:"Welche Aufgabe haben die Teile des Auges?",
+    pairs:[["Linse","bündelt das Licht zu einem scharfen Bild"],["Netzhaut","enthält die Lichtsinneszellen"],["Pupille","lässt das Licht ins Auge"],["Sehnerv","leitet die Signale zum Gehirn"]],
+    explain:"Licht fällt durch die Pupille, die Linse bündelt es auf die Netzhaut, der Sehnerv meldet das Bild ans Gehirn."},
+   {type:"single",q:"Bei Kurzsichtigkeit entsteht das scharfe Bild <b>vor</b> der Netzhaut. Was hilft?",
+    options:["Eine Brille mit Sammellinse","Eine Brille mit Zerstreuungslinse","Mehr Licht","Augentropfen"],answer:1,
+    explain:"Der Augapfel ist zu lang. Eine Zerstreuungslinse verschiebt das Bild nach hinten auf die Netzhaut."},
+   {type:"single",q:"Was macht eine Sinneszelle?",
+    options:["Sie speichert Erinnerungen","Sie wandelt einen Reiz in elektrische Signale um","Sie bewegt Muskeln","Sie bildet Hormone"],answer:1,
+    explain:"Sinneszellen sind „Übersetzer“: Licht, Schall oder Druck werden zu elektrischen Signalen, die Nerven weiterleiten."},
    {type:"order",q:"Du fasst auf eine heiße Herdplatte. Bring den Weg vom Reiz zur Reaktion in die richtige Reihenfolge.",
     items:["Sinneszellen in der Haut","Sensorischer Nerv","Rückenmark","Motorischer Nerv","Muskel zieht die Hand weg"],
-    explain:"Das ist ein Reflex: Das Rückenmark schaltet direkt um, das Gehirn wird erst danach informiert. Darum geht es so schnell."},
+    explain:"Das ist ein Reflex: Das Rückenmark schaltet direkt um, das Gehirn erfährt es erst danach."},
+   {type:"single",q:"Warum solltest du bei sehr lauter Musik oder Lärm Gehörschutz tragen?",
+    options:["Damit die Ohren warm bleiben","Lärm kann die Haarsinneszellen im Innenohr dauerhaft zerstören","Damit man sich besser konzentriert","Das ist nur bei Erwachsenen nötig"],answer:1,
+    explain:"Zerstörte Haarsinneszellen wachsen nicht nach. Hörschäden durch Lärm sind bleibend."},
+   {type:"single",q:"Was bewirkt das Hormon Insulin?",
+    options:["Es erhöht den Blutzucker","Es senkt den Blutzucker","Es macht wach","Es lässt Haare wachsen"],answer:1,
+    explain:"Insulin aus der Bauchspeicheldrüse senkt den Blutzucker. Sein Gegenspieler Glukagon erhöht ihn."},
+   {type:"single",q:"Was ist bei Diabetes Typ 1 die Ursache?",
+    options:["Man isst zu viel Zucker","Die Bauchspeicheldrüse bildet kein Insulin mehr","Das Herz ist zu schwach","Man trinkt zu wenig"],answer:1,
+    explain:"Bei Typ 1 fehlt Insulin. Betroffene messen ihren Blutzucker und spritzen Insulin, z. B. mit Pen oder Pumpe."},
+   {type:"single",q:"Du hast vor einem Referat Herzklopfen und schwitzige Hände. Was steckt dahinter?",
+    options:["Eine Erkältung","Die Stressreaktion: Hormone wie Adrenalin machen den Körper bereit","Zu wenig Schlaf","Ein Reflex des Rückenmarks"],answer:1,
+    explain:"Stresshormone versetzen den Körper in Alarmbereitschaft. Kurz ist das hilfreich, dauerhafter Stress schadet."}
+  ]},
+ {id:"I",title:"Immunsystem",icon:"🦠",color:"var(--c7)",hex:"#1f8fb3",bp:"3.2.2.6",
+  topics:"Bakterien und Viren, Infektion, Abwehr, Impfung",
+  qs:[
+   {type:"single",q:"Welche Aussage über Viren stimmt?",
+    options:["Viren sind größer als Bakterien","Viren können sich nur in fremden Zellen vermehren","Viren haben einen Zellkern","Viren kann man mit Antibiotika bekämpfen"],answer:1,
+    explain:"Viren sind keine Zellen und haben keinen eigenen Stoffwechsel. Sie benutzen unsere Zellen, um sich zu vermehren."},
    {type:"single",q:"Gegen welche Krankheitserreger helfen Antibiotika?",
     options:["Gegen Viren","Gegen Bakterien","Gegen beide","Gegen keine von beiden"],answer:1,
-    explain:"Antibiotika wirken nur gegen Bakterien. Viren haben keinen eigenen Stoffwechsel und vermehren sich in unseren Zellen."},
+    explain:"Antibiotika wirken nur gegen Bakterien. Bei Grippe oder Erkältung (Viren) helfen sie nicht."},
+   {type:"order",q:"Bring den Verlauf einer Infektionskrankheit in die richtige Reihenfolge.",
+    items:["Ansteckung","Inkubationszeit (man merkt noch nichts)","Ausbruch der Krankheit","Genesung"],
+    explain:"Ansteckung → Inkubationszeit → Ausbruch → Genesung. Schon in der Inkubationszeit kann man andere anstecken."},
+   {type:"single",q:"Welche Abwehr hat der Körper <b>von Geburt an</b>?",
+    options:["Antikörper gegen Masern","Haut, Schleimhäute und Fresszellen","Gedächtniszellen gegen Grippe","Impfschutz"],answer:1,
+    explain:"Die angeborene Abwehr wirkt sofort und gegen alle Erreger. Antikörper und Gedächtniszellen bildet der Körper erst später."},
+   {type:"match",q:"Wer macht was in der Immunabwehr?",
+    pairs:[["Fresszellen","fressen Erreger"],["Antikörper","verklumpen Erreger"],["Killerzellen","zerstören befallene Körperzellen"],["Gedächtniszellen","merken sich den Erreger"]],
+    explain:"Fresszellen räumen auf, Antikörper markieren und verklumpen, Killerzellen vernichten infizierte Zellen, Gedächtniszellen sorgen für Immunität."},
    {type:"single",q:"Warum wird man nach einer Impfung oft nicht mehr krank?",
     options:["Die Impfung tötet alle Erreger im Körper","Der Körper bildet Gedächtniszellen und erkennt den Erreger später schneller","Die Impfung macht das Blut dicker","Impfungen enthalten Antibiotika"],answer:1,
-    explain:"Bei der Impfung lernt das Immunsystem den Erreger ungefährlich kennen. Gedächtniszellen sorgen dafür, dass es beim echten Erreger sofort reagiert."}
+    explain:"Aktive Impfung: Das Immunsystem lernt den Erreger ungefährlich kennen und bildet Gedächtniszellen."},
+   {type:"multi",q:"Womit kannst du dich vor Infektionen schützen? Wähle alle richtigen aus.",
+    options:["Regelmäßig Hände waschen","In die Armbeuge niesen","Antibiotika vorsorglich nehmen","Impfungen auffrischen"],answer:[0,1,3],
+    explain:"Hygiene und Impfungen schützen. Antibiotika vorsorglich zu nehmen hilft nicht und fördert Resistenzen."}
   ]},
- {id:"O",title:"Ökologie",icon:"🌿",color:"var(--o)",hex:"#c98a12",bp:"3.2.3",
-  topics:"Nahrungsketten, Ökosystem, Stoffkreislauf",
+ {id:"O",title:"Ökologie",icon:"🌿",color:"var(--c8)",hex:"#b8860b",bp:"3.2.3",
+  topics:"Ökosystem, Umweltfaktoren, Nahrungsnetz, Beziehungen, Stoffkreislauf, Nachhaltigkeit",
   qs:[
-   {type:"order",q:"Bilde eine Nahrungskette: Wer wird von wem gefressen? Beginne mit dem, was am Anfang steht.",
+   {type:"single",q:"Ein Ökosystem besteht aus Biotop und Biozönose. Was ist das <b>Biotop</b>?",
+    options:["Alle Lebewesen im Gebiet","Der Lebensraum mit seinen unbelebten Bedingungen wie Boden, Licht und Wasser","Ein Naturschutzgebiet","Eine einzelne Tierart"],answer:1,
+    explain:"Biotop = Lebensraum (unbelebt). Biozönose = Lebensgemeinschaft aller Lebewesen darin."},
+   {type:"multi",q:"Welche sind <b>abiotische</b> (unbelebte) Umweltfaktoren? Wähle alle richtigen aus.",
+    options:["Temperatur","Licht","Fressfeinde","Wasser","Parasiten"],answer:[0,1,3],
+    explain:"Temperatur, Licht und Wasser sind abiotisch. Fressfeinde und Parasiten sind biotische Faktoren."},
+   {type:"single",q:"Wo viele Brennnesseln wachsen, ist der Boden meist …",
+    options:["sehr trocken","reich an Stickstoff","salzig","sauer und nährstoffarm"],answer:1,
+    explain:"Brennnesseln sind Zeigerpflanzen für stickstoffreichen, gut gedüngten Boden."},
+   {type:"single",q:"Der Wüstenfuchs hat riesige Ohren. Wozu?",
+    options:["Um besser zu sehen","Um über die große Fläche Wärme abzugeben und gut zu hören","Um Wasser zu speichern","Zur Tarnung"],answer:1,
+    explain:"Angepasstheit: Große Ohren geben Wärme ab und orten Beute. Der Polarfuchs hat dagegen kleine Ohren."},
+   {type:"order",q:"Bilde eine Nahrungskette: Beginne mit dem, was am Anfang steht.",
     items:["Gras","Hase","Fuchs"],
-    explain:"Gras → Hase → Fuchs. Der Pfeil zeigt immer in die Richtung, in die Energie und Stoffe weitergegeben werden."},
+    explain:"Gras → Hase → Fuchs. Der Pfeil zeigt, wohin Energie und Stoffe weitergegeben werden. Viele Ketten zusammen ergeben ein Nahrungsnetz."},
    {type:"match",q:"Ordne jedem Lebewesen seine Rolle im Ökosystem zu.",
     pairs:[["Gras","Produzent"],["Hase","Konsument"],["Pilz","Destruent"]],
-    explain:"Produzenten stellen durch Fotosynthese Nährstoffe her. Konsumenten fressen andere Lebewesen. Destruenten zersetzen tote Reste."},
-   {type:"single",q:"Was machen Destruenten wie Bakterien, Pilze und Regenwürmer?",
-    options:["Sie betreiben Fotosynthese","Sie zersetzen tote Lebewesen zu Mineralstoffen","Sie fressen nur Pflanzen","Sie sind Krankheitserreger"],answer:1,
-    explain:"Destruenten zersetzen tote Reste. Die Mineralstoffe nutzen Pflanzen wieder. So schließt sich der Stoffkreislauf."},
+    explain:"Produzenten bauen durch Fotosynthese Stoffe auf, Konsumenten fressen, Destruenten zersetzen tote Reste."},
+   {type:"match",q:"Welche Beziehung zwischen Lebewesen ist das?",
+    pairs:[["Zecke saugt Blut beim Hund","Parasitismus"],["Pilz und Alge bilden zusammen eine Flechte","Symbiose"],["Luchs jagt Reh","Räuber-Beute-Beziehung"],["Zwei Amseln streiten um dasselbe Revier","Konkurrenz"]],
+    explain:"Parasit nutzt Wirt, Symbiose nützt beiden, Räuber frisst Beute, Konkurrenz um dieselbe Ressource."},
    {type:"single",q:"In einem Wald verschwinden plötzlich alle Füchse. Was passiert wahrscheinlich zuerst?",
     options:["Es gibt weniger Hasen","Es gibt mehr Hasen","Es wächst mehr Gras","Nichts ändert sich"],answer:1,
-    explain:"Ohne Fressfeind vermehren sich die Hasen stark. Danach wird das Gras knapp. Alles im Nahrungsnetz hängt zusammen."}
+    explain:"Ohne Fressfeind vermehren sich die Hasen stark, danach wird das Gras knapp. Alles im Netz hängt zusammen."},
+   {type:"single",q:"Warum gibt es viel weniger Füchse als Hasen und viel weniger Hasen als Grashalme?",
+    options:["Füchse sind seltener schwanger","Auf jeder Stufe geht der größte Teil der Energie verloren, nur ca. 10 % kommen an","Gras wächst schneller","Zufall"],answer:1,
+    explain:"Energie wird für Bewegung und Wärme verbraucht. Darum wird die Biomasse von Stufe zu Stufe kleiner (Nahrungspyramide)."},
+   {type:"single",q:"Was passiert beim Verbrennen von Kohle, Öl und Benzin?",
+    options:["Es wird Sauerstoff frei","Kohlenstoff, der lange gespeichert war, gelangt als CO₂ in die Luft","Es entsteht Dünger","Pflanzen wachsen besser"],answer:1,
+    explain:"Fossile Brennstoffe sind gespeicherter Kohlenstoff. Verbrennen bringt zusätzliches CO₂ in den Kohlenstoffkreislauf und verstärkt den Klimawandel."},
+   {type:"single",q:"Der Waschbär wurde aus Nordamerika eingeschleppt. Warum kann das ein Problem sein?",
+    options:["Er ist giftig","Eingeschleppte Arten (Neobiota) können heimische Arten verdrängen","Er frisst nur Müll","Das ist kein Problem"],answer:1,
+    explain:"Neobiota haben oft keine natürlichen Feinde und gefährden heimische Arten. Artenschutz heißt auch, die Biodiversität zu erhalten."}
   ]}
 ];
 const RATES=[{e:"🤷",t:"Hatten wir nicht"},{e:"🤏",t:"Hatten wir, kann ich aber kaum noch"},{e:"💪",t:"Kann ich gut erklären"}];
-const INTERESTS=["Zelle & Stoffwechsel","Mein Körper","Nerven & Sinne","Immunsystem & Krankheiten","Ökologie & Umwelt","Sexualität & Fortpflanzung"];
+const INTERESTS=STATIONS.map(st=>st.icon+" "+st.title);
 
 /* ---------- Zustand ---------- */
-const KEY="bio9e-diagnose-v1";
+const KEY="bio9e-diagnose-v2";
 let S=load()||{name:"",ratings:{},ans:{},interest:null,finished:false};
 let V={screen:S.name?(S.finished?"end":"map"):"start",st:null,qi:0,tmp:null,checked:false,result:null};
 function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
@@ -221,7 +372,7 @@ function startView(){return `${topbar()}
  <div class="card">
   <div class="big">🧬</div>
   <h1>Bio-Check: Was weißt du schon?</h1>
-  <p>Vier Stationen aus Klasse 7 und 8. Du entscheidest selbst, in welcher Reihenfolge und wie schnell.</p>
+  <p>Acht Stationen mit allem aus Bio Klasse 7 bis 9. Du entscheidest selbst, in welcher Reihenfolge und wie schnell. Plane etwa 30 bis 40 Minuten ein.</p>
   <p class="muted small"><b>Das ist kein Test mit Note.</b> Wenn du etwas nicht weißt, tippe einfach auf „Weiß ich nicht“. Das hilft mehr als raten, denn so sehe ich, was wir noch üben müssen.</p>
   <label for="nm" class="small"><b>Dein Vorname</b></label>
   <input id="nm" type="text" autocomplete="off" maxlength="30" value="${esc(S.name)}" placeholder="z. B. Mia">
@@ -238,7 +389,7 @@ function mapView(){
     <div class="ico">${st.icon}</div>
     <div><div class="t">${st.title}</div><div class="s">${d?`<span class="stars">${"★".repeat(sc.r)}${"☆".repeat(sc.n-sc.r)}</span>`:st.topics}</div></div>
    </button>`}).join("")}</div>
-  <div style="margin-top:18px">${all?`<button class="btn" id="fin">Zur Auswertung 🏁</button>`:`<p class="muted small" style="text-align:center">Schaffe alle vier Stationen, dann bekommst du deine Auswertung.</p>`}</div>
+  <div style="margin-top:18px">${all?`<button class="btn" id="fin">Zur Auswertung 🏁</button>`:`<p class="muted small" style="text-align:center">Schaffe alle acht Stationen, dann bekommst du deine Auswertung.</p>`}</div>
   <div class="foot"><button id="reset">Neu starten (anderer Name)</button></div>`}
 
 function rateView(){const st=STATIONS[V.st];return `${topbar()}
